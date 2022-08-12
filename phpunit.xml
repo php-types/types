@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+>
+    <testsuites>
+        <testsuite name="Functional">
+            <directory>./tests/functional</directory>
+        </testsuite>
+    </testsuites>
+    <coverage>
+        <include>
+            <directory>./src</directory>
+        </include>
+    </coverage>
+</phpunit>

@@ -1,0 +1,12 @@
+/*
+!/.github/
+!/.gitignore
+!/composer.json
+!/generated/
+!/infection.json
+!/phpcs.xml
+!/phpstan.dist.neon
+!/PhpTypes.g4
+!/phpunit.xml
+!/src/
+!/tests/

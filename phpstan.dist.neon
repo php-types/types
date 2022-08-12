@@ -1,0 +1,12 @@
+parameters:
+    level: max
+    paths:
+        - src
+        - tests
+    scanFiles:
+        - generated/PhpTypes/Ast/Generated/PhpTypesBaseListener.php
+        - generated/PhpTypes/Ast/Generated/PhpTypesBaseVisitor.php
+        - generated/PhpTypes/Ast/Generated/PhpTypesLexer.php
+        - generated/PhpTypes/Ast/Generated/PhpTypesListener.php
+        - generated/PhpTypes/Ast/Generated/PhpTypesParser.php
+        - generated/PhpTypes/Ast/Generated/PhpTypesVisitor.php
