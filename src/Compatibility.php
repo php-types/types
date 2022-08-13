@@ -29,6 +29,7 @@ final class Compatibility
             IntType::class => self::checkInt($super, $sub),
             MixedType::class => true,
             NeverType::class => false,
+            NullType::class => $sub instanceof NullType,
             ScalarType::class => self::checkScalar($sub),
             StringType::class => self::checkString($super, $sub),
             UnionType::class => self::checkUnion($super, $sub),
@@ -106,10 +107,10 @@ final class Compatibility
             return false;
         }
         [$superMin, $superMax, $subMin, $subMax] = [
-                $super->min ?? PHP_INT_MIN,
-                $super->max ?? PHP_INT_MAX,
-                $sub->min ?? PHP_INT_MIN,
-                $sub->max ?? PHP_INT_MAX,
+            $super->min ?? PHP_INT_MIN,
+            $super->max ?? PHP_INT_MAX,
+            $sub->min ?? PHP_INT_MIN,
+            $sub->max ?? PHP_INT_MAX,
         ];
         return $superMin <= $subMin && $superMax >= $subMax;
     }
