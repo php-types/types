@@ -6,6 +6,7 @@
 - `-42` is a subtype of `int<min, -1>`
 - `-42` is a subtype of `int<min, 42>`
 - `-42` is a subtype of `negative-int`
+- `-42` is a subtype of `scalar`
 - `-42` is a subtype of `string | int`
 - `-42` is a subtype of `string | int | bool`
 
@@ -17,6 +18,7 @@
 - `-1` is a subtype of `int<min, -1>`
 - `-1` is a subtype of `int<min, 42>`
 - `-1` is a subtype of `negative-int`
+- `-1` is a subtype of `scalar`
 - `-1` is a subtype of `string | int`
 - `-1` is a subtype of `string | int | bool`
 
@@ -26,6 +28,7 @@
 - `0` is a subtype of `int | string`
 - `0` is a subtype of `int<-123, 321>`
 - `0` is a subtype of `int<min, 42>`
+- `0` is a subtype of `scalar`
 - `0` is a subtype of `string | int`
 - `0` is a subtype of `string | int | bool`
 
@@ -37,6 +40,7 @@
 - `1` is a subtype of `int<1, max>`
 - `1` is a subtype of `int<min, 42>`
 - `1` is a subtype of `positive-int`
+- `1` is a subtype of `scalar`
 - `1` is a subtype of `string | int`
 - `1` is a subtype of `string | int | bool`
 
@@ -51,5 +55,6 @@
 - `23` is a subtype of `int<23, 42>`
 - `23` is a subtype of `int<min, 42>`
 - `23` is a subtype of `positive-int`
+- `23` is a subtype of `scalar`
 - `23` is a subtype of `string | int`
 - `23` is a subtype of `string | int | bool`

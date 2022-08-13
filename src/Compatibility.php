@@ -29,6 +29,7 @@ final class Compatibility
             IntType::class => self::checkInt($super, $sub),
             MixedType::class => true,
             NeverType::class => false,
+            ScalarType::class => self::checkScalar($sub),
             StringType::class => self::checkString($super, $sub),
             UnionType::class => self::checkUnion($super, $sub),
             default => throw new LogicException(sprintf('Unsupported type "%s"', $superClass)),
@@ -158,5 +159,17 @@ final class Compatibility
             return true;
         }
         return false;
+    }
+
+    private static function checkScalar(AbstractType $sub): bool
+    {
+        return $sub instanceof ScalarType
+            || $sub instanceof IntLiteralType
+            || $sub instanceof IntType
+            || $sub instanceof FloatType
+            || $sub instanceof BoolType
+            || $sub instanceof StringType
+            || $sub instanceof ClassStringType
+            || ($sub instanceof UnionType && self::checkScalar($sub->left) && self::checkScalar($sub->right));
     }
 }

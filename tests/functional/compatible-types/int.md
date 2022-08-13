@@ -1,6 +1,7 @@
 - `int` is a subtype of `float`
 - `int` is a subtype of `int`
 - `int` is a subtype of `int | string`
+- `int` is a subtype of `scalar`
 - `int` is a subtype of `string | int`
 - `int` is a subtype of `string | int | bool`
 
@@ -8,6 +9,7 @@
 - `int<-123, 321>` is a subtype of `int`
 - `int<-123, 321>` is a subtype of `int | string`
 - `int<-123, 321>` is a subtype of `int<-123, 321>`
+- `int<-123, 321>` is a subtype of `scalar`
 - `int<-123, 321>` is a subtype of `string | int`
 - `int<-123, 321>` is a subtype of `string | int | bool`
 
@@ -16,6 +18,7 @@
 - `int<1, max>` is a subtype of `int | string`
 - `int<1, max>` is a subtype of `int<1, max>`
 - `int<1, max>` is a subtype of `positive-int`
+- `int<1, max>` is a subtype of `scalar`
 - `int<1, max>` is a subtype of `string | int`
 - `int<1, max>` is a subtype of `string | int | bool`
 
@@ -30,6 +33,7 @@
 - `int<23, 23>` is a subtype of `int<23, max>`
 - `int<23, 23>` is a subtype of `int<min, 42>`
 - `int<23, 23>` is a subtype of `positive-int`
+- `int<23, 23>` is a subtype of `scalar`
 - `int<23, 23>` is a subtype of `string | int`
 - `int<23, 23>` is a subtype of `string | int | bool`
 
@@ -42,6 +46,7 @@
 - `int<23, 42>` is a subtype of `int<23, max>`
 - `int<23, 42>` is a subtype of `int<min, 42>`
 - `int<23, 42>` is a subtype of `positive-int`
+- `int<23, 42>` is a subtype of `scalar`
 - `int<23, 42>` is a subtype of `string | int`
 - `int<23, 42>` is a subtype of `string | int | bool`
 
@@ -51,6 +56,7 @@
 - `int<23, max>` is a subtype of `int<1, max>`
 - `int<23, max>` is a subtype of `int<23, max>`
 - `int<23, max>` is a subtype of `positive-int`
+- `int<23, max>` is a subtype of `scalar`
 - `int<23, max>` is a subtype of `string | int`
 - `int<23, max>` is a subtype of `string | int | bool`
 
@@ -60,6 +66,7 @@
 - `int<min, -1>` is a subtype of `int<min, -1>`
 - `int<min, -1>` is a subtype of `int<min, 42>`
 - `int<min, -1>` is a subtype of `negative-int`
+- `int<min, -1>` is a subtype of `scalar`
 - `int<min, -1>` is a subtype of `string | int`
 - `int<min, -1>` is a subtype of `string | int | bool`
 
@@ -67,6 +74,7 @@
 - `int<min, 42>` is a subtype of `int`
 - `int<min, 42>` is a subtype of `int | string`
 - `int<min, 42>` is a subtype of `int<min, 42>`
+- `int<min, 42>` is a subtype of `scalar`
 - `int<min, 42>` is a subtype of `string | int`
 - `int<min, 42>` is a subtype of `string | int | bool`
 
@@ -76,6 +84,7 @@
 - `negative-int` is a subtype of `int<min, -1>`
 - `negative-int` is a subtype of `int<min, 42>`
 - `negative-int` is a subtype of `negative-int`
+- `negative-int` is a subtype of `scalar`
 - `negative-int` is a subtype of `string | int`
 - `negative-int` is a subtype of `string | int | bool`
 
@@ -84,5 +93,6 @@
 - `positive-int` is a subtype of `int | string`
 - `positive-int` is a subtype of `int<1, max>`
 - `positive-int` is a subtype of `positive-int`
+- `positive-int` is a subtype of `scalar`
 - `positive-int` is a subtype of `string | int`
 - `positive-int` is a subtype of `string | int | bool`
