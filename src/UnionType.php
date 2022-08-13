@@ -17,4 +17,15 @@ final class UnionType extends AbstractType
     {
         return new UnionNode($this->left->toNode(), $this->right->toNode());
     }
+
+    /**
+     * @return list<AbstractType>
+     */
+    public function flatten(): array
+    {
+        return array_merge(
+            $this->left instanceof UnionType ? $this->left->flatten() : [$this->left],
+            $this->right instanceof UnionType ? $this->right->flatten() : [$this->right]
+        );
+    }
 }

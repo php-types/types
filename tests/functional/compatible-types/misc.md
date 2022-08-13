@@ -1,0 +1,2 @@
+- `float` is a subtype of `float`
+- `mixed` is a subtype of `mixed`
