@@ -1,0 +1,8 @@
+array
+array<array-key, float>
+array<array-key, mixed>
+array<float>
+array<mixed>
+array<int, string>
+array<string, bool>
+non-empty-array<int, string>

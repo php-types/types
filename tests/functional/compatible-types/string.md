@@ -1,6 +1,5 @@
 - `class-string` is a subtype of `class-string`
 - `class-string` is a subtype of `int | string`
-- `class-string` is a subtype of `mixed`
 - `class-string` is a subtype of `non-empty-string`
 - `class-string` is a subtype of `scalar`
 - `class-string` is a subtype of `string`
@@ -11,7 +10,6 @@
 - `class-string<Foo>` is a subtype of `class-string<Foo>`
 - `class-string<Foo>` is a subtype of `class-string<FooInterface>`
 - `class-string<Foo>` is a subtype of `int | string`
-- `class-string<Foo>` is a subtype of `mixed`
 - `class-string<Foo>` is a subtype of `non-empty-string`
 - `class-string<Foo>` is a subtype of `scalar`
 - `class-string<Foo>` is a subtype of `string`
@@ -21,7 +19,6 @@
 - `class-string<FooInterface>` is a subtype of `class-string`
 - `class-string<FooInterface>` is a subtype of `class-string<FooInterface>`
 - `class-string<FooInterface>` is a subtype of `int | string`
-- `class-string<FooInterface>` is a subtype of `mixed`
 - `class-string<FooInterface>` is a subtype of `non-empty-string`
 - `class-string<FooInterface>` is a subtype of `scalar`
 - `class-string<FooInterface>` is a subtype of `string`

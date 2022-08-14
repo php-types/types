@@ -28,6 +28,7 @@ final class Compatibility
             IntLiteralType::class => self::checkIntLiteral($super, $sub),
             IntType::class => self::checkInt($super, $sub),
             ListType::class => self::checkList($super, $sub),
+            MapType::class => self::checkMap($super, $sub),
             MixedType::class => true,
             NeverType::class => false,
             NullType::class => $sub instanceof NullType,
@@ -184,5 +185,19 @@ final class Compatibility
             return false;
         }
         return self::check($super->type, $sub->type);
+    }
+
+    private static function checkMap(MapType $super, AbstractType $sub): bool
+    {
+        if ($sub instanceof ListType) {
+            $sub = $sub->toMap();
+        }
+        if (!$sub instanceof MapType) {
+            return false;
+        }
+        if ($super->nonEmpty && !$sub->nonEmpty) {
+            return false;
+        }
+        return self::check($super->keyType, $sub->keyType) && self::check($super->valueType, $sub->valueType);
     }
 }

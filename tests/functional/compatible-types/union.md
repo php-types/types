@@ -8,6 +8,5 @@
 - `string | int` is a subtype of `string | int`
 - `string | int` is a subtype of `string | int | bool`
 
-- `string | int | bool` is a subtype of `int | string | bool`
 - `string | int | bool` is a subtype of `scalar`
 - `string | int | bool` is a subtype of `string | int | bool`

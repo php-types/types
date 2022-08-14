@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PhpTypes\Types\Tests\Functional;
 
 use DirectoryIterator;
+use LogicException;
 use PhpTypes\Types\ClassLikeType;
 use PhpTypes\Types\Compatibility;
 use PhpTypes\Types\MixedType;
@@ -12,14 +13,15 @@ use PhpTypes\Types\Scope;
 use PhpTypes\Types\Type;
 use PHPUnit\Framework\TestCase;
 
+use function array_map;
+use function array_search;
 use function explode;
 use function file_get_contents;
-use function in_array;
 use function sprintf;
 
 final class CompatibilityTest extends TestCase
 {
-    private Scope $scope;
+    private static Scope $scope;
 
     /**
      * @return list<array{string, string}>
@@ -81,8 +83,8 @@ final class CompatibilityTest extends TestCase
      */
     public function testCompatibility(string $super, string $sub, bool $expected): void
     {
-        $superType = Type::fromString($super, $this->scope);
-        $subType = Type::fromString($sub, $this->scope);
+        $superType = Type::fromString($super, self::$scope);
+        $subType = Type::fromString($sub, self::$scope);
 
         $message = $expected
             ? sprintf('Expected "%s" to be a subtype of "%s", but it is not', $sub, $super)
@@ -98,13 +100,30 @@ final class CompatibilityTest extends TestCase
         $compatibleTypes = self::compatibleTypes();
         foreach (self::types() as $super) {
             foreach (self::types() as $sub) {
-                $expected = in_array([$super, $sub], $compatibleTypes, true);
+                $compatibleTypesKey = array_search([$super, $sub], $compatibleTypes, true);
+                $expected = $compatibleTypesKey !== false;
                 $name = $expected
                     ? sprintf('%s is a subtype of %s', $sub, $super)
                     : sprintf('%s is not a subtype of %s', $sub, $super);
                 yield $name => [$super, $sub, $expected];
+                unset($compatibleTypes[$compatibleTypesKey]);
             }
         }
+        if ($compatibleTypes === []) {
+            return;
+        }
+        throw new LogicException(
+            sprintf(
+                "There are %s unchecked compatibility declarations:\n%s",
+                count($compatibleTypes),
+                implode(
+                    "\n",
+                    array_map(static function (array $compatibleType): string {
+                        return sprintf('- `%s` is a subtype of `%s`', $compatibleType[1], $compatibleType[0]);
+                    }, $compatibleTypes),
+                ),
+            )
+        );
     }
 
     /**
@@ -113,7 +132,7 @@ final class CompatibilityTest extends TestCase
     public function testEveryTypeIsCompatibleWithMixed(string $type): void
     {
         self::assertTrue(
-            Compatibility::check(new MixedType(), Type::fromString($type, $this->scope)),
+            Compatibility::check(new MixedType(), Type::fromString($type, self::$scope)),
             sprintf('Expected "%s" to be a subtype of "mixed", but it is not', $type),
         );
     }
@@ -128,13 +147,13 @@ final class CompatibilityTest extends TestCase
         }
     }
 
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
-        $this->scope = Scope::global();
+        self::$scope = Scope::global();
         $fooInterface = new ClassLikeType('FooInterface');
-        $this->scope->register('FooInterface', $fooInterface);
-        $this->scope->register('Foo', new ClassLikeType('Foo', parents: [$fooInterface]));
+        self::$scope->register('FooInterface', $fooInterface);
+        self::$scope->register('Foo', new ClassLikeType('Foo', parents: [$fooInterface]));
     }
 }

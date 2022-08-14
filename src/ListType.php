@@ -22,4 +22,9 @@ final class ListType extends AbstractType
     {
         return new IdentifierNode($this->nonEmpty ? 'non-empty-list' : 'list', [$this->type->toNode()]);
     }
+
+    public function toMap(): MapType
+    {
+        return new MapType(new IntType(), $this->type, $this->nonEmpty);
+    }
 }
