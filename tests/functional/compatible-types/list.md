@@ -5,15 +5,22 @@
 - `list<int>` is a subtype of `array<mixed>`
 - `list<int>` is a subtype of `list<int>`
 - `list<int>` is a subtype of `list<int | bool>`
+- `list<int>` is a subtype of `list<int | string>`
 
 - `list<int | bool>` is a subtype of `array`
 - `list<int | bool>` is a subtype of `array<array-key, mixed>`
 - `list<int | bool>` is a subtype of `array<mixed>`
 - `list<int | bool>` is a subtype of `list<int | bool>`
 
+- `list<int | string>` is a subtype of `array`
+- `list<int | string>` is a subtype of `array<array-key, mixed>`
+- `list<int | string>` is a subtype of `array<mixed>`
+- `list<int | string>` is a subtype of `list<int | string>`
+
 - `list<string>` is a subtype of `array`
 - `list<string>` is a subtype of `array<array-key, mixed>`
 - `list<string>` is a subtype of `array<mixed>`
+- `list<string>` is a subtype of `list<int | string>`
 - `list<string>` is a subtype of `list<string>`
 - `list<string>` is a subtype of `array<int, string>`
 
@@ -21,6 +28,7 @@
 - `non-empty-list<string>` is a subtype of `array<array-key, mixed>`
 - `non-empty-list<string>` is a subtype of `array<int, string>`
 - `non-empty-list<string>` is a subtype of `array<mixed>`
+- `non-empty-list<string>` is a subtype of `list<int | string>`
 - `non-empty-list<string>` is a subtype of `list<string>`
 - `non-empty-list<string>` is a subtype of `non-empty-array<int, string>`
 - `non-empty-list<string>` is a subtype of `non-empty-list<string>`

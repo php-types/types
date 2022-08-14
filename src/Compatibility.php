@@ -6,6 +6,7 @@ namespace PhpTypes\Types;
 
 use LogicException;
 
+use function count;
 use function get_class;
 
 use const PHP_INT_MAX;
@@ -34,6 +35,7 @@ final class Compatibility
             NullType::class => $sub instanceof NullType,
             ScalarType::class => self::checkScalar($sub),
             StringType::class => self::checkString($super, $sub),
+            TupleType::class => self::checkTuple($super, $sub),
             UnionType::class => self::checkUnion($super, $sub),
             default => throw new LogicException(sprintf('Unsupported type "%s"', $superClass)),
         };
@@ -178,6 +180,15 @@ final class Compatibility
 
     private static function checkList(ListType $super, AbstractType $sub): bool
     {
+        if ($sub instanceof TupleType) {
+            foreach ($sub->elements as $element) {
+                if (self::check($super->type, $element)) {
+                    continue;
+                }
+                return false;
+            }
+            return true;
+        }
         if (!$sub instanceof ListType) {
             return false;
         }
@@ -189,7 +200,7 @@ final class Compatibility
 
     private static function checkMap(MapType $super, AbstractType $sub): bool
     {
-        if ($sub instanceof ListType) {
+        if ($sub instanceof ListType || $sub instanceof TupleType) {
             $sub = $sub->toMap();
         }
         if (!$sub instanceof MapType) {
@@ -199,5 +210,22 @@ final class Compatibility
             return false;
         }
         return self::check($super->keyType, $sub->keyType) && self::check($super->valueType, $sub->valueType);
+    }
+
+    private static function checkTuple(TupleType $super, AbstractType $sub): bool
+    {
+        if (!$sub instanceof TupleType) {
+            return false;
+        }
+        if (count($super->elements) > count($sub->elements)) {
+            return false;
+        }
+        foreach ($super->elements as $i => $element) {
+            if (self::check($element, $sub->elements[$i])) {
+                continue;
+            }
+            return false;
+        }
+        return true;
     }
 }

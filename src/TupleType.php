@@ -24,4 +24,20 @@ final class TupleType extends AbstractType
         }
         return new TupleNode($elementNodes);
     }
+
+    public function toMap(): MapType
+    {
+        $valueType = null;
+        foreach ($this->elements as $element) {
+            if ($valueType === null) {
+                $valueType = $element;
+                continue;
+            }
+            if (Compatibility::check($valueType, $element)) {
+                continue;
+            }
+            $valueType = new UnionType($valueType, $element);
+        }
+        return new MapType(new IntType(), $valueType);
+    }
 }
