@@ -27,6 +27,7 @@ final class Compatibility
             FloatType::class => self::checkFloat($sub),
             IntLiteralType::class => self::checkIntLiteral($super, $sub),
             IntType::class => self::checkInt($super, $sub),
+            ListType::class => self::checkList($super, $sub),
             MixedType::class => true,
             NeverType::class => false,
             NullType::class => $sub instanceof NullType,
@@ -107,10 +108,10 @@ final class Compatibility
             return false;
         }
         [$superMin, $superMax, $subMin, $subMax] = [
-            $super->min ?? PHP_INT_MIN,
-            $super->max ?? PHP_INT_MAX,
-            $sub->min ?? PHP_INT_MIN,
-            $sub->max ?? PHP_INT_MAX,
+                $super->min ?? PHP_INT_MIN,
+                $super->max ?? PHP_INT_MAX,
+                $sub->min ?? PHP_INT_MIN,
+                $sub->max ?? PHP_INT_MAX,
         ];
         return $superMin <= $subMin && $superMax >= $subMax;
     }
@@ -172,5 +173,16 @@ final class Compatibility
             || $sub instanceof StringType
             || $sub instanceof ClassStringType
             || ($sub instanceof UnionType && self::checkScalar($sub->left) && self::checkScalar($sub->right));
+    }
+
+    private static function checkList(ListType $super, AbstractType $sub): bool
+    {
+        if (!$sub instanceof ListType) {
+            return false;
+        }
+        if ($super->nonEmpty && !$sub->nonEmpty) {
+            return false;
+        }
+        return self::check($super->type, $sub->type);
     }
 }
