@@ -7,6 +7,7 @@ namespace PhpTypes\Types\Tests\Functional;
 use DirectoryIterator;
 use PhpTypes\Types\ClassLikeType;
 use PhpTypes\Types\Compatibility;
+use PhpTypes\Types\MixedType;
 use PhpTypes\Types\Scope;
 use PhpTypes\Types\Type;
 use PHPUnit\Framework\TestCase;
@@ -18,6 +19,8 @@ use function sprintf;
 
 final class CompatibilityTest extends TestCase
 {
+    private Scope $scope;
+
     /**
      * @return list<array{string, string}>
      */
@@ -51,16 +54,35 @@ final class CompatibilityTest extends TestCase
     }
 
     /**
+     * @return iterable<int, string>
+     */
+    private static function types(): iterable
+    {
+        foreach (self::typeFiles() as $file) {
+            foreach (explode("\n", file_get_contents($file)) as $line) {
+                if ($line === '') {
+                    continue;
+                }
+                yield $line;
+            }
+        }
+    }
+
+    /**
+     * @return iterable<int, string>
+     */
+    private static function typeFiles(): iterable
+    {
+        return self::filesInDirectory(__DIR__ . '/types/');
+    }
+
+    /**
      * @dataProvider cases
      */
     public function testCompatibility(string $super, string $sub, bool $expected): void
     {
-        $scope = Scope::global();
-        $fooInterface = new ClassLikeType('FooInterface');
-        $scope->register('FooInterface', $fooInterface);
-        $scope->register('Foo', new ClassLikeType('Foo', parents: [$fooInterface]));
-        $superType = Type::fromString($super, $scope);
-        $subType = Type::fromString($sub, $scope);
+        $superType = Type::fromString($super, $this->scope);
+        $subType = Type::fromString($sub, $this->scope);
 
         $message = $expected
             ? sprintf('Expected "%s" to be a subtype of "%s", but it is not', $sub, $super)
@@ -74,8 +96,8 @@ final class CompatibilityTest extends TestCase
     public function cases(): iterable
     {
         $compatibleTypes = self::compatibleTypes();
-        foreach ($this->types() as $super) {
-            foreach ($this->types() as $sub) {
+        foreach (self::types() as $super) {
+            foreach (self::types() as $sub) {
                 $expected = in_array([$super, $sub], $compatibleTypes, true);
                 $name = $expected
                     ? sprintf('%s is a subtype of %s', $sub, $super)
@@ -86,25 +108,33 @@ final class CompatibilityTest extends TestCase
     }
 
     /**
-     * @return iterable<int, string>
+     * @dataProvider allTypes
      */
-    private function types(): iterable
+    public function testEveryTypeIsCompatibleWithMixed(string $type): void
     {
-        foreach ($this->typeFiles() as $file) {
-            foreach (explode("\n", file_get_contents($file)) as $line) {
-                if ($line === '') {
-                    continue;
-                }
-                yield $line;
-            }
-        }
+        self::assertTrue(
+            Compatibility::check(new MixedType(), Type::fromString($type, $this->scope)),
+            sprintf('Expected "%s" to be a subtype of "mixed", but it is not', $type),
+        );
     }
 
     /**
-     * @return iterable<int, string>
+     * @return iterable<int, array{string}>
      */
-    private function typeFiles(): iterable
+    public function allTypes(): iterable
     {
-        return self::filesInDirectory(__DIR__ . '/types/');
+        foreach (self::types() as $type) {
+            yield $type => [$type];
+        }
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->scope = Scope::global();
+        $fooInterface = new ClassLikeType('FooInterface');
+        $this->scope->register('FooInterface', $fooInterface);
+        $this->scope->register('Foo', new ClassLikeType('Foo', parents: [$fooInterface]));
     }
 }
