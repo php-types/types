@@ -25,4 +25,19 @@ final class StructType extends AbstractType
         }
         return new StructNode($members);
     }
+
+    public function toMap(): MapType
+    {
+        /** @var array{AbstractType, AbstractType}|null $types */
+        $types = null;
+        foreach ($this->members as $name => $member) {
+            if ($types === null) {
+                $types = [new StringLiteralType($name), $member->type];
+                continue;
+            }
+            $types[0] = new UnionType($types[0], new StringLiteralType($name));
+            $types[1] = new UnionType($types[1], $member->type);
+        }
+        return new MapType($types[0], $types[1], true);
+    }
 }

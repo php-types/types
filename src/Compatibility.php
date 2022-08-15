@@ -8,6 +8,7 @@ use LogicException;
 
 use function count;
 use function get_class;
+use function is_numeric;
 
 use const PHP_INT_MAX;
 use const PHP_INT_MIN;
@@ -34,7 +35,9 @@ final class Compatibility
             NeverType::class => false,
             NullType::class => $sub instanceof NullType,
             ScalarType::class => self::checkScalar($sub),
+            StringLiteralType::class => self::checkStringLiteral($super, $sub),
             StringType::class => self::checkString($super, $sub),
+            StructType::class => self::checkStruct($super, $sub),
             TupleType::class => self::checkTuple($super, $sub),
             UnionType::class => self::checkUnion($super, $sub),
             default => throw new LogicException(sprintf('Unsupported type "%s"', $superClass)),
@@ -73,11 +76,17 @@ final class Compatibility
 
     private static function checkString(StringType $super, AbstractType $sub): bool
     {
-        if ($sub instanceof ClassStringType) {
+        if ($sub instanceof StringLiteralType) {
             if ($super->numeric) {
-                return false;
+                return is_numeric($sub->value);
+            }
+            if ($super->nonEmpty) {
+                return $sub->value !== '';
             }
             return true;
+        }
+        if ($sub instanceof ClassStringType) {
+            return !$super->numeric;
         }
         if (!$sub instanceof StringType) {
             return false;
@@ -200,7 +209,7 @@ final class Compatibility
 
     private static function checkMap(MapType $super, AbstractType $sub): bool
     {
-        if ($sub instanceof ListType || $sub instanceof TupleType) {
+        if ($sub instanceof ListType || $sub instanceof TupleType || $sub instanceof StructType) {
             $sub = $sub->toMap();
         }
         if (!$sub instanceof MapType) {
@@ -227,5 +236,30 @@ final class Compatibility
             return false;
         }
         return true;
+    }
+
+    private static function checkStruct(StructType $super, AbstractType $sub): bool
+    {
+        if (!$sub instanceof StructType) {
+            return false;
+        }
+        foreach ($super->members as $name => $member) {
+            $subMember = $sub->members[$name] ?? null;
+            if ($subMember === null) {
+                return false;
+            }
+            if (!self::check($member->type, $subMember->type)) {
+                return false;
+            }
+            if ($subMember->optional && !$member->optional) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static function checkStringLiteral(StringLiteralType $super, AbstractType $sub): bool
+    {
+        return $sub instanceof StringLiteralType && $super->value === $sub->value;
     }
 }
