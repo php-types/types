@@ -2,6 +2,7 @@
 - `''` is a subtype of `int | string`
 - `''` is a subtype of `scalar`
 - `''` is a subtype of `string`
+- `''` is a subtype of `string | 'foo'`
 - `''` is a subtype of `string | int`
 - `''` is a subtype of `string | int | bool`
 
@@ -11,21 +12,26 @@
 - `'42'` is a subtype of `numeric-string`
 - `'42'` is a subtype of `scalar`
 - `'42'` is a subtype of `string`
+- `'42'` is a subtype of `string | 'foo'`
 - `'42'` is a subtype of `string | int`
 - `'42'` is a subtype of `string | int | bool`
 
 - `'foo'` is a subtype of `'foo'`
+- `'foo'` is a subtype of `'foo' | 'bar'`
 - `'foo'` is a subtype of `int | string`
 - `'foo'` is a subtype of `non-empty-string`
 - `'foo'` is a subtype of `scalar`
 - `'foo'` is a subtype of `string`
+- `'foo'` is a subtype of `string | 'foo'`
 - `'foo'` is a subtype of `string | int`
 - `'foo'` is a subtype of `string | int | bool`
 
 - `'bar'` is a subtype of `'bar'`
+- `'bar'` is a subtype of `'foo' | 'bar'`
 - `'bar'` is a subtype of `int | string`
 - `'bar'` is a subtype of `non-empty-string`
 - `'bar'` is a subtype of `scalar`
 - `'bar'` is a subtype of `string`
+- `'bar'` is a subtype of `string | 'foo'`
 - `'bar'` is a subtype of `string | int`
 - `'bar'` is a subtype of `string | int | bool`

@@ -2,3 +2,8 @@ int | string
 string | int
 string | int | bool
 list<string> | list<int>
+true | false
+false | true
+'foo' | 'bar'
+bool | true
+string | 'foo'

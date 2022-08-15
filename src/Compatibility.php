@@ -106,6 +106,9 @@ final class Compatibility
 
     private static function checkBool(BoolType $super, AbstractType $sub): bool
     {
+        if ($sub instanceof UnionType) {
+            return self::check($super, $sub->left) && self::check($super, $sub->right);
+        }
         if (!$sub instanceof BoolType) {
             return false;
         }

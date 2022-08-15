@@ -17,11 +17,23 @@ use function array_map;
 use function array_search;
 use function explode;
 use function file_get_contents;
+use function in_array;
+use function sort;
 use function sprintf;
 
 final class CompatibilityTest extends TestCase
 {
     private static Scope $scope;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        self::$scope = Scope::global();
+        $fooInterface = new ClassLikeType('FooInterface');
+        self::$scope->register('FooInterface', $fooInterface);
+        self::$scope->register('Foo', new ClassLikeType('Foo', parents: [$fooInterface]));
+    }
 
     /**
      * @return list<array{string, string}>
@@ -32,7 +44,7 @@ final class CompatibilityTest extends TestCase
         foreach (self::filesInDirectory(__DIR__ . '/compatible-types/') as $file) {
             foreach (explode("\n", file_get_contents($file)) as $line) {
                 $isMatch = \Safe\preg_match('/^- `(?<sub>.+)` is a subtype of `(?<super>.+)`/', $line, $matches);
-                if (!$isMatch) {
+                if ($isMatch === 0) {
                     continue;
                 }
                 $types[] = [$matches['super'], $matches['sub']];
@@ -79,7 +91,25 @@ final class CompatibilityTest extends TestCase
     }
 
     /**
-     * @dataProvider cases
+     * @return list<array{string, string}>
+     */
+    private static function aliases(): array
+    {
+        $aliases = [];
+        foreach (explode("\n", file_get_contents(__DIR__ . '/aliases.md')) as $line) {
+            $isMatch = \Safe\preg_match('/^- `(?<a>.+)` is an alias of `(?<b>.+)`/', $line, $matches);
+            if ($isMatch === 0) {
+                continue;
+            }
+            $tuple = [$matches['a'], $matches['b']];
+            sort($tuple);
+            $aliases[] = $tuple;
+        }
+        return $aliases;
+    }
+
+    /**
+     * @dataProvider compatibilityCases
      */
     public function testCompatibility(string $super, string $sub, bool $expected): void
     {
@@ -95,7 +125,7 @@ final class CompatibilityTest extends TestCase
     /**
      * @return iterable<string, array{string, string, bool}>
      */
-    public function cases(): iterable
+    public function compatibilityCases(): iterable
     {
         $compatibleTypes = self::compatibleTypes();
         foreach (self::types() as $super) {
@@ -147,13 +177,46 @@ final class CompatibilityTest extends TestCase
         }
     }
 
-    public static function setUpBeforeClass(): void
+    /**
+     * @dataProvider aliasCases
+     */
+    public function testAliases(string $a, string $b, bool $expected): void
     {
-        parent::setUpBeforeClass();
+        $aType = Type::fromString($a, self::$scope);
+        $bType = Type::fromString($b, self::$scope);
 
-        self::$scope = Scope::global();
-        $fooInterface = new ClassLikeType('FooInterface');
-        self::$scope->register('FooInterface', $fooInterface);
-        self::$scope->register('Foo', new ClassLikeType('Foo', parents: [$fooInterface]));
+        $isAlias = Compatibility::check($aType, $bType) && Compatibility::check($bType, $aType);
+
+        $message = $expected
+            ? sprintf('Expected "%s" to be an alias of "%s", but it is not', $b, $a)
+            : sprintf('Expected "%s" not to be an alias of "%s", but it is', $b, $a);
+        self::assertSame($expected, $isAlias, $message);
+    }
+
+    /**
+     * @return iterable<string, array{string, string, bool}>
+     */
+    public function aliasCases(): iterable
+    {
+        $aliases = self::aliases();
+        $seen = [];
+        foreach (self::types() as $a) {
+            foreach (self::types() as $b) {
+                if ($a === $b) {
+                    continue;
+                }
+                $tuple = [$a, $b];
+                sort($tuple);
+                if (in_array($tuple, $seen, true)) {
+                    continue;
+                }
+                $expected = array_search($tuple, $aliases, true) !== false;
+                $name = $expected
+                    ? sprintf('%s is an alias of %s', $b, $a)
+                    : sprintf('%s is not an alias of %s', $b, $a);
+                yield $name => [$a, $b, $expected];
+                $seen[] = $tuple;
+            }
+        }
     }
 }

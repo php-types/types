@@ -61,10 +61,23 @@ final class Type
 
     private static function fromUnion(UnionNode $node, Scope $scope): AbstractType
     {
-        return new UnionType(
-            self::fromNode($node->left, $scope),
-            self::fromNode($node->right, $scope),
-        );
+        $left = self::fromNode($node->left, $scope);
+        $right = self::fromNode($node->right, $scope);
+        if (Compatibility::check($left, $right)) {
+            return $left;
+        }
+        if (Compatibility::check($right, $left)) {
+            return $right;
+        }
+        if ($left instanceof BoolType && $right instanceof BoolType) {
+            if (
+                ($left->value === true && $right->value === false)
+                || ($left->value === false && $right->value === true)
+            ) {
+                return new BoolType();
+            }
+        }
+        return new UnionType($left, $right);
     }
 
     private static function fromTuple(TupleNode $node, Scope $scope): TupleType
