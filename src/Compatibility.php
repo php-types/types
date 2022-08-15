@@ -24,6 +24,7 @@ final class Compatibility
         $superClass = get_class($super);
         return match ($superClass) {
             BoolType::class => self::checkBool($super, $sub),
+            CallableType::class => self::checkCallable($super, $sub),
             ClassLikeType::class => self::checkClassLike($super, $sub),
             ClassStringType::class => self::checkClassString($super, $sub),
             FloatType::class => self::checkFloat($sub),
@@ -262,5 +263,29 @@ final class Compatibility
     private static function checkStringLiteral(StringLiteralType $super, AbstractType $sub): bool
     {
         return $sub instanceof StringLiteralType && $super->value === $sub->value;
+    }
+
+    private static function checkCallable(CallableType $super, AbstractType $sub): bool
+    {
+        if (!$sub instanceof CallableType) {
+            return false;
+        }
+        if (!$super->returnType instanceof VoidType && !self::check($super->returnType, $sub->returnType)) {
+            return false;
+        }
+        if (count($sub->parameters) > count($super->parameters)) {
+            return false;
+        }
+        foreach ($sub->parameters as $i => $parameter) {
+            $superParameter = $super->parameters[$i];
+            if (!$parameter->optional && $superParameter->optional) {
+                return false;
+            }
+            if (self::check($parameter->type, $superParameter->type)) {
+                continue;
+            }
+            return false;
+        }
+        return true;
     }
 }

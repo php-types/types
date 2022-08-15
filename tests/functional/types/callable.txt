@@ -1,0 +1,7 @@
+callable(): void
+callable(): string
+callable(string): float
+callable(string): int
+callable(string=): int
+callable(string, int): int
+callable(string | int): int
