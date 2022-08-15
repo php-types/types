@@ -183,6 +183,7 @@ final class Compatibility
             || $sub instanceof FloatType
             || $sub instanceof BoolType
             || $sub instanceof StringType
+            || $sub instanceof StringLiteralType
             || $sub instanceof ClassStringType
             || ($sub instanceof UnionType && self::checkScalar($sub->left) && self::checkScalar($sub->right));
     }
