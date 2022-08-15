@@ -1,3 +1,4 @@
 int | string
 string | int
 string | int | bool
+list<string> | list<int>

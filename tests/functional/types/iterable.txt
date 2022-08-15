@@ -1,0 +1,9 @@
+iterable
+iterable<mixed>
+iterable<mixed, mixed>
+iterable<mixed, string>
+iterable<mixed, class-string>
+iterable<Foo, string>
+iterable<FooInterface, string>
+iterable<string | int, bool>
+iterable<array-key, bool>

@@ -6,10 +6,11 @@ namespace PhpTypes\Types;
 
 use PhpTypes\Ast\Node\IdentifierNode;
 use PhpTypes\Ast\Node\NodeInterface;
+use PhpTypes\Types\Conversion\ToIterableInterface;
 
 use function in_array;
 
-final class MapType extends AbstractType
+final class MapType extends AbstractType implements ToIterableInterface
 {
     public function __construct(
         public readonly AbstractType $keyType,
@@ -41,5 +42,10 @@ final class MapType extends AbstractType
             $this->nonEmpty ? 'non-empty-array' : 'array',
             [$keyNode, $this->valueType->toNode()]
         );
+    }
+
+    public function toIterable(): IterableType
+    {
+        return new IterableType($this->keyType, $this->valueType);
     }
 }

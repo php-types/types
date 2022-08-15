@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace PhpTypes\Types;
 
 use LogicException;
+use PhpTypes\Types\Conversion\ToIterableInterface;
+use PhpTypes\Types\Conversion\ToMapInterface;
 
 use function count;
 use function get_class;
@@ -30,6 +32,7 @@ final class Compatibility
             FloatType::class => self::checkFloat($sub),
             IntLiteralType::class => self::checkIntLiteral($super, $sub),
             IntType::class => self::checkInt($super, $sub),
+            IterableType::class => self::checkIterable($super, $sub),
             ListType::class => self::checkList($super, $sub),
             MapType::class => self::checkMap($super, $sub),
             MixedType::class => true,
@@ -191,6 +194,9 @@ final class Compatibility
 
     private static function checkList(ListType $super, AbstractType $sub): bool
     {
+        if ($sub instanceof UnionType) {
+            $sub = $sub->toList();
+        }
         if ($sub instanceof TupleType) {
             foreach ($sub->elements as $element) {
                 if (self::check($super->type, $element)) {
@@ -211,7 +217,7 @@ final class Compatibility
 
     private static function checkMap(MapType $super, AbstractType $sub): bool
     {
-        if ($sub instanceof ListType || $sub instanceof TupleType || $sub instanceof StructType) {
+        if ($sub instanceof ToMapInterface) {
             $sub = $sub->toMap();
         }
         if (!$sub instanceof MapType) {
@@ -287,5 +293,17 @@ final class Compatibility
             return false;
         }
         return true;
+    }
+
+    private static function checkIterable(IterableType $super, AbstractType $sub): bool
+    {
+        if ($sub instanceof ToIterableInterface) {
+            $sub = $sub->toIterable();
+        }
+        if (!$sub instanceof IterableType) {
+            return false;
+        }
+        return self::check($super->keyType, $sub->keyType)
+            && self::check($super->valueType, $sub->valueType);
     }
 }
