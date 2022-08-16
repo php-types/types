@@ -11,6 +11,7 @@ jobs:
       matrix:
         php: [ '8.1' ]
         prefer-lowest: [ '--prefer-lowest', '' ]
+      fail-fast: false
 
     name: PHPUnit on PHP ${{ matrix.php }}
 
