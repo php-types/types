@@ -31,7 +31,7 @@ final class StructType extends AbstractType implements ToIterableInterface, ToMa
     public function toMap(): MapType
     {
         $types = $this->keyAndValueType();
-        return new MapType($types[0], $types[1], true);
+        return MapType::nonEmpty($types[0], $types[1]);
     }
 
     public function toIterable(): IterableType

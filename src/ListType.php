@@ -15,11 +15,6 @@ final class ListType extends AbstractType implements ToIterableInterface, ToMapI
     {
     }
 
-    public function nonEmpty(AbstractType $type): AbstractType
-    {
-        return new ListType($type, true);
-    }
-
     public function toNode(): NodeInterface
     {
         return new IdentifierNode($this->nonEmpty ? 'non-empty-list' : 'list', [$this->type->toNode()]);

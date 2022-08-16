@@ -19,7 +19,7 @@ final class MapType extends AbstractType implements ToIterableInterface
     ) {
     }
 
-    public function nonEmpty(AbstractType $keyType, AbstractType $valueType): AbstractType
+    public static function nonEmpty(AbstractType $keyType, AbstractType $valueType): self
     {
         return new self($keyType, $valueType, true);
     }

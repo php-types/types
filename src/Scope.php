@@ -24,7 +24,6 @@ final class Scope
         $scope->register('bool', new BoolType());
         $scope->register('false', new BoolType(false));
         $scope->register('float', new FloatType());
-        $scope->register('int', self::int(...));
         $scope->register('iterable', $scope->iterable(...));
         $scope->register('list', self::list(...));
         $scope->register('mixed', new MixedType());
@@ -42,44 +41,6 @@ final class Scope
         $scope->register('true', new BoolType(true));
         $scope->register('void', new VoidType());
         return $scope;
-    }
-
-    /**
-     * @param list<AbstractType> $typeParameters
-     */
-    private static function int(array $typeParameters): IntType
-    {
-        switch (count($typeParameters)) {
-            case 0:
-                return new IntType();
-            case 2:
-                if (
-                    $typeParameters[0] instanceof IntLiteralType
-                    && $typeParameters[1] instanceof IntLiteralType
-                ) {
-                    return IntType::minMax(
-                        $typeParameters[0]->value,
-                        $typeParameters[1]->value,
-                    );
-                }
-                throw new RuntimeException(
-                    sprintf(
-                        'Integer types must take one of the following forms: ' .
-                        'int, `int<23, 42>`, `int<min, 42>`, `int<23, max>`. ' .
-                        'Got: int<%s>',
-                        implode(', ', $typeParameters),
-                    )
-                );
-            default:
-                throw new RuntimeException(
-                    sprintf(
-                        'Integer types must take one of the following forms: ' .
-                        'int, `int<23, 42>`, `int<min, 42>`, `int<23, max>`. ' .
-                        'Got: int<%s>',
-                        implode(', ', $typeParameters),
-                    )
-                );
-        }
     }
 
     /**

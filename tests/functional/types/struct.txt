@@ -1,4 +1,5 @@
 array{age?: int, name: string}
+array{name: int}
 array{name: string}
 array{name: string, age: int}
 array{name: string, age?: int}

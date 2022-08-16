@@ -1,5 +1,4 @@
 - `list<int>` is a subtype of `array`
-- `list<int>` is a subtype of `array`
 - `list<int>` is a subtype of `array<array-key, float>`
 - `list<int>` is a subtype of `array<array-key, mixed>`
 - `list<int>` is a subtype of `array<array-key, string | int>`

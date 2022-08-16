@@ -23,14 +23,6 @@ final class StringType extends AbstractType
         return new StringType(true, true);
     }
 
-    public function __toString(): string
-    {
-        if ($this->numeric) {
-            return 'numeric-string';
-        }
-        return $this->nonEmpty ? 'non-empty-string' : 'string';
-    }
-
     public function toNode(): NodeInterface
     {
         if ($this->numeric) {
