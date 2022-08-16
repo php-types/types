@@ -13,15 +13,6 @@ final class BoolType extends AbstractType
     {
     }
 
-    public function __toString(): string
-    {
-        return match ($this->value) {
-            null => 'bool',
-            true => 'true',
-            false => 'false',
-        };
-    }
-
     public function toNode(): NodeInterface
     {
         return new IdentifierNode(
