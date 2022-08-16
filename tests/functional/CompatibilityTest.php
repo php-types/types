@@ -16,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 use function array_map;
 use function array_search;
 use function explode;
-use function file_get_contents;
 use function in_array;
 use function sort;
 use function sprintf;
