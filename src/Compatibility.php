@@ -26,28 +26,27 @@ final class Compatibility
         if (!$super instanceof UnionType && $sub instanceof UnionType) {
             return self::checkSubUnion($super, $sub);
         }
-        $superClass = get_class($super);
-        return match ($superClass) {
-            BoolType::class => self::checkBool($super, $sub),
-            CallableType::class => self::checkCallable($super, $sub),
-            ClassLikeType::class => self::checkClassLike($super, $sub),
-            ClassStringType::class => self::checkClassString($super, $sub),
-            FloatType::class => self::checkFloat($sub),
-            IntLiteralType::class => self::checkIntLiteral($super, $sub),
-            IntType::class => self::checkInt($super, $sub),
-            IterableType::class => self::checkIterable($super, $sub),
-            ListType::class => self::checkList($super, $sub),
-            MapType::class => self::checkMap($super, $sub),
-            MixedType::class => true,
-            NeverType::class => false,
-            NullType::class => $sub instanceof NullType,
-            ScalarType::class => self::checkScalar($sub),
-            StringLiteralType::class => self::checkStringLiteral($super, $sub),
-            StringType::class => self::checkString($super, $sub),
-            StructType::class => self::checkStruct($super, $sub),
-            TupleType::class => self::checkTuple($super, $sub),
-            UnionType::class => self::checkUnion($super, $sub),
-            default => throw new LogicException(sprintf('Unsupported type "%s"', $superClass)),
+        return match (true) {
+            $super instanceof BoolType => self::checkBool($super, $sub),
+            $super instanceof CallableType => self::checkCallable($super, $sub),
+            $super instanceof ClassLikeType => self::checkClassLike($super, $sub),
+            $super instanceof ClassStringType => self::checkClassString($super, $sub),
+            $super instanceof FloatType => self::checkFloat($sub),
+            $super instanceof IntLiteralType => self::checkIntLiteral($super, $sub),
+            $super instanceof IntType => self::checkInt($super, $sub),
+            $super instanceof IterableType => self::checkIterable($super, $sub),
+            $super instanceof ListType => self::checkList($super, $sub),
+            $super instanceof MapType => self::checkMap($super, $sub),
+            $super instanceof MixedType => true,
+            $super instanceof NeverType => false,
+            $super instanceof NullType => $sub instanceof NullType,
+            $super instanceof ScalarType => self::checkScalar($sub),
+            $super instanceof StringLiteralType => self::checkStringLiteral($super, $sub),
+            $super instanceof StringType => self::checkString($super, $sub),
+            $super instanceof StructType => self::checkStruct($super, $sub),
+            $super instanceof TupleType => self::checkTuple($super, $sub),
+            $super instanceof UnionType => self::checkUnion($super, $sub),
+            default => throw new LogicException(sprintf('Unsupported type "%s"', get_class($super))),
         };
     }
 

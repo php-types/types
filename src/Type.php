@@ -44,6 +44,9 @@ final class Type
             $node instanceof StructNode => self::fromStruct($node->members, $scope),
             $node instanceof TupleNode => self::fromTuple($node, $scope),
             $node instanceof UnionNode => self::fromUnion($node, $scope),
+            default => throw new RuntimeException(
+                sprintf('Unsupported node type: %s (%s)', get_class($node), $node)
+            ),
         };
     }
 
@@ -90,7 +93,7 @@ final class Type
     }
 
     /**
-     * @param list<StructMemberNode> $members
+     * @param array<non-empty-string, StructMemberNode> $members
      */
     private static function fromStruct(array $members, Scope $scope): StructType
     {

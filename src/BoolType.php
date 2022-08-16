@@ -24,6 +24,12 @@ final class BoolType extends AbstractType
 
     public function toNode(): NodeInterface
     {
-        return new IdentifierNode((string)$this);
+        return new IdentifierNode(
+            match ($this->value) {
+                null => 'bool',
+                true => 'true',
+                false => 'false',
+            }
+        );
     }
 }

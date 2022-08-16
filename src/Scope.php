@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypes\Types;
 
-use PhpTypes\Ast\Node\IdentifierNode;
 use RuntimeException;
 
 use function count;
@@ -62,20 +61,6 @@ final class Scope
                         $typeParameters[0]->value,
                         $typeParameters[1]->value,
                     );
-                }
-                if (
-                    $typeParameters[0] instanceof IntLiteralType
-                    && $typeParameters[1] instanceof IdentifierNode
-                    && $typeParameters[1]->name === 'max'
-                ) {
-                    return IntType::min($typeParameters[0]->value);
-                }
-                if (
-                    $typeParameters[0] instanceof IdentifierNode
-                    && $typeParameters[0]->name === 'min'
-                    && $typeParameters[1] instanceof IntLiteralType
-                ) {
-                    return IntType::max($typeParameters[1]->value);
                 }
                 throw new RuntimeException(
                     sprintf(

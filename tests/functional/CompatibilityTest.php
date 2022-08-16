@@ -42,7 +42,7 @@ final class CompatibilityTest extends TestCase
     {
         $types = [];
         foreach (self::filesInDirectory(__DIR__ . '/compatible-types/') as $file) {
-            foreach (explode("\n", file_get_contents($file)) as $line) {
+            foreach (explode("\n", \Safe\file_get_contents($file)) as $line) {
                 $isMatch = \Safe\preg_match('/^- `(?<sub>.+)` is a subtype of `(?<super>.+)`/', $line, $matches);
                 if ($isMatch === 0) {
                     continue;
@@ -73,7 +73,7 @@ final class CompatibilityTest extends TestCase
     private static function types(): iterable
     {
         foreach (self::typeFiles() as $file) {
-            foreach (explode("\n", file_get_contents($file)) as $line) {
+            foreach (explode("\n", \Safe\file_get_contents($file)) as $line) {
                 if ($line === '') {
                     continue;
                 }
@@ -96,7 +96,7 @@ final class CompatibilityTest extends TestCase
     private static function aliases(): array
     {
         $aliases = [];
-        foreach (explode("\n", file_get_contents(__DIR__ . '/aliases.md')) as $line) {
+        foreach (explode("\n", \Safe\file_get_contents(__DIR__ . '/aliases.md')) as $line) {
             $isMatch = \Safe\preg_match('/^- `(?<a>.+)` is an alias of `(?<b>.+)`/', $line, $matches);
             if ($isMatch === 0) {
                 continue;
@@ -168,7 +168,7 @@ final class CompatibilityTest extends TestCase
     }
 
     /**
-     * @return iterable<int, array{string}>
+     * @return iterable<string, array{string}>
      */
     public function allTypes(): iterable
     {

@@ -39,6 +39,9 @@ final class TupleType extends AbstractType implements ToIterableInterface, ToMap
 
     public function valueType(): AbstractType
     {
+        if ($this->elements === []) {
+            return new MixedType();
+        }
         $valueType = null;
         foreach ($this->elements as $element) {
             if ($valueType === null) {
