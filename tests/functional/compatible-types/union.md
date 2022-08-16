@@ -1,6 +1,9 @@
 - `'foo' | 'bar'` is a subtype of `'foo' | 'bar'`
 - `'foo' | 'bar'` is a subtype of `int | string`
+- `'foo' | 'bar'` is a subtype of `non-empty-string`
 - `'foo' | 'bar'` is a subtype of `scalar`
+- `'foo' | 'bar'` is a subtype of `string`
+- `'foo' | 'bar'` is a subtype of `string | 'foo'`
 - `'foo' | 'bar'` is a subtype of `string | int`
 - `'foo' | 'bar'` is a subtype of `string | int | bool`
 

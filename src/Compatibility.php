@@ -23,6 +23,9 @@ final class Compatibility
 
     public static function check(AbstractType $super, AbstractType $sub): bool
     {
+        if (!$super instanceof UnionType && $sub instanceof UnionType) {
+            return self::checkSubUnion($super, $sub);
+        }
         $superClass = get_class($super);
         return match ($superClass) {
             BoolType::class => self::checkBool($super, $sub),
@@ -106,9 +109,6 @@ final class Compatibility
 
     private static function checkBool(BoolType $super, AbstractType $sub): bool
     {
-        if ($sub instanceof UnionType) {
-            return self::check($super, $sub->left) && self::check($super, $sub->right);
-        }
         if (!$sub instanceof BoolType) {
             return false;
         }
@@ -127,10 +127,10 @@ final class Compatibility
             return false;
         }
         [$superMin, $superMax, $subMin, $subMax] = [
-                $super->min ?? PHP_INT_MIN,
-                $super->max ?? PHP_INT_MAX,
-                $sub->min ?? PHP_INT_MIN,
-                $sub->max ?? PHP_INT_MAX,
+            $super->min ?? PHP_INT_MIN,
+            $super->max ?? PHP_INT_MAX,
+            $sub->min ?? PHP_INT_MIN,
+            $sub->max ?? PHP_INT_MAX,
         ];
         return $superMin <= $subMin && $superMax >= $subMax;
     }
@@ -191,15 +191,11 @@ final class Compatibility
             || $sub instanceof BoolType
             || $sub instanceof StringType
             || $sub instanceof StringLiteralType
-            || $sub instanceof ClassStringType
-            || ($sub instanceof UnionType && self::checkScalar($sub->left) && self::checkScalar($sub->right));
+            || $sub instanceof ClassStringType;
     }
 
     private static function checkList(ListType $super, AbstractType $sub): bool
     {
-        if ($sub instanceof UnionType) {
-            $sub = $sub->toList();
-        }
         if ($sub instanceof TupleType) {
             foreach ($sub->elements as $element) {
                 if (self::check($super->type, $element)) {
@@ -308,5 +304,10 @@ final class Compatibility
         }
         return self::check($super->keyType, $sub->keyType)
             && self::check($super->valueType, $sub->valueType);
+    }
+
+    private static function checkSubUnion(AbstractType $super, UnionType $sub): bool
+    {
+        return self::check($super, $sub->left) && self::check($super, $sub->right);
     }
 }
