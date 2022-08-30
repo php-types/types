@@ -8,6 +8,11 @@
 - `iterable<array-key, bool>` is a subtype of `iterable<mixed, mixed>`
 - `iterable<array-key, bool>` is a subtype of `iterable<string | int, bool>`
 
+- `iterable<Foo, Foo>` is a subtype of `iterable`
+- `iterable<Foo, Foo>` is a subtype of `iterable<Foo, Foo>`
+- `iterable<Foo, Foo>` is a subtype of `iterable<mixed>`
+- `iterable<Foo, Foo>` is a subtype of `iterable<mixed, mixed>`
+
 - `iterable<Foo, string>` is a subtype of `iterable`
 - `iterable<Foo, string>` is a subtype of `iterable<Foo, string>`
 - `iterable<Foo, string>` is a subtype of `iterable<FooInterface, string>`
