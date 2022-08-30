@@ -8,6 +8,7 @@ use LogicException;
 use PhpTypes\Types\Conversion\ToIterableInterface;
 use PhpTypes\Types\Conversion\ToMapInterface;
 
+use function array_key_exists;
 use function count;
 use function get_class;
 use function is_numeric;
@@ -154,31 +155,7 @@ final class Compatibility
 
     private static function checkUnion(UnionType $super, AbstractType $sub): bool
     {
-        if ($sub instanceof UnionType) {
-            $superTypes = $super->flatten();
-            foreach ($sub->flatten() as $type) {
-                if (self::isSubtypeOfAny($type, $superTypes)) {
-                    continue;
-                }
-                return false;
-            }
-            return true;
-        }
         return self::check($super->left, $sub) || self::check($super->right, $sub);
-    }
-
-    /**
-     * @param list<AbstractType> $haystack
-     */
-    private static function isSubtypeOfAny(AbstractType $type, array $haystack): bool
-    {
-        foreach ($haystack as $item) {
-            if (!self::check($item, $type)) {
-                continue;
-            }
-            return true;
-        }
-        return false;
     }
 
     private static function checkScalar(AbstractType $sub): bool
@@ -250,7 +227,7 @@ final class Compatibility
             return false;
         }
         foreach ($super->members as $name => $member) {
-            $subMember = $sub->members[$name] ?? null;
+            $subMember = array_key_exists($name, $sub->members) ? $sub->members[$name] : null;
             if ($subMember === null) {
                 return false;
             }
