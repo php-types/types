@@ -37,7 +37,7 @@ final class TupleType extends AbstractType implements ToIterableInterface, ToMap
         return new IterableType(new IntType(), $this->valueType());
     }
 
-    public function valueType(): AbstractType
+    private function valueType(): AbstractType
     {
         if ($this->elements === []) {
             return new MixedType();
@@ -48,6 +48,7 @@ final class TupleType extends AbstractType implements ToIterableInterface, ToMap
                 $valueType = $element;
                 continue;
             }
+            // @infection-ignore-all This isn't really required, it's just an optimization.
             if (Compatibility::check($valueType, $element)) {
                 continue;
             }

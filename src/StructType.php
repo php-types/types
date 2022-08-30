@@ -43,7 +43,7 @@ final class StructType extends AbstractType implements ToIterableInterface, ToMa
     /**
      * @return array{AbstractType, AbstractType}
      */
-    public function keyAndValueType(): array
+    private function keyAndValueType(): array
     {
         if ($this->members === []) {
             return [StringType::nonEmpty(), new MixedType()];

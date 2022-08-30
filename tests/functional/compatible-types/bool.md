@@ -8,6 +8,7 @@
 - `false` is a subtype of `bool`
 - `false` is a subtype of `bool | true`
 - `false` is a subtype of `false`
+- `false` is a subtype of `false | list<string>`
 - `false` is a subtype of `false | true`
 - `false` is a subtype of `scalar`
 - `false` is a subtype of `string | int | bool`

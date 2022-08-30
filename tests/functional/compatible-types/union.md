@@ -16,6 +16,8 @@
 - `bool | true` is a subtype of `string | int | bool`
 - `bool | true` is a subtype of `true | false`
 
+- `false | list<string>` is a subtype of `false | list<string>`
+
 - `false | true` is a subtype of `bool`
 - `false | true` is a subtype of `bool | true`
 - `false | true` is a subtype of `false | true`

@@ -35,6 +35,7 @@
 - `array{string, string}` is a subtype of `array<int, string>`
 - `array{string, string}` is a subtype of `array<mixed>`
 - `array{string, string}` is a subtype of `array{string, string}`
+- `array{string, string}` is a subtype of `false | list<string>`
 - `array{string, string}` is a subtype of `iterable`
 - `array{string, string}` is a subtype of `iterable<mixed>`
 - `array{string, string}` is a subtype of `iterable<mixed, mixed>`

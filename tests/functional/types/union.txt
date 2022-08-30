@@ -4,6 +4,7 @@ string | int | bool
 list<string> | list<int>
 true | false
 false | true
+false | list<string>
 'foo' | 'bar'
 bool | true
 string | 'foo'
