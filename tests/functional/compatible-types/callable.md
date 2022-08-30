@@ -7,16 +7,21 @@
 
 - `callable(string): int` is a subtype of `callable(string): float`
 - `callable(string): int` is a subtype of `callable(string): int`
+- `callable(string): int` is a subtype of `callable(string, bool): int`
 - `callable(string): int` is a subtype of `callable(string, int): int`
 
 - `callable(string=): int` is a subtype of `callable(string): float`
 - `callable(string=): int` is a subtype of `callable(string): int`
 - `callable(string=): int` is a subtype of `callable(string=): int`
+- `callable(string=): int` is a subtype of `callable(string, bool): int`
 - `callable(string=): int` is a subtype of `callable(string, int): int`
+
+- `callable(string, bool): int` is a subtype of `callable(string, bool): int`
 
 - `callable(string, int): int` is a subtype of `callable(string, int): int`
 
 - `callable(string | int): int` is a subtype of `callable(string): float`
 - `callable(string | int): int` is a subtype of `callable(string): int`
+- `callable(string | int): int` is a subtype of `callable(string, bool): int`
 - `callable(string | int): int` is a subtype of `callable(string, int): int`
 - `callable(string | int): int` is a subtype of `callable(string | int): int`
