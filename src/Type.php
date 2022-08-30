@@ -73,12 +73,7 @@ final class Type
             return $right;
         }
         if ($left instanceof BoolType && $right instanceof BoolType) {
-            if (
-                ($left->value === true && $right->value === false)
-                || ($left->value === false && $right->value === true)
-            ) {
-                return new BoolType();
-            }
+            return new BoolType($left->value === $right->value ? $left->value : null);
         }
         return new UnionType($left, $right);
     }
