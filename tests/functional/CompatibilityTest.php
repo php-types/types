@@ -64,7 +64,7 @@ final class CompatibilityTest extends TestCase
     private static function filesInDirectory(string $directory): iterable
     {
         foreach (new DirectoryIterator($directory) as $file) {
-            if ($file->isDot()) {
+            if (!$file->isFile()) {
                 continue;
             }
 
@@ -150,11 +150,10 @@ final class CompatibilityTest extends TestCase
                 $name = $expected
                     ? sprintf('%s is a subtype of %s', $sub, $super)
                     : sprintf('%s is not a subtype of %s', $sub, $super);
-                if ($name === 'list<int> is not a subtype of array') {
+                if ($name === 'list<int> is a subtype of array') {
                     var_dump($compatibleTypes);
                     var_dump($compatibleTypesKey);
                     var_dump([$super, $sub]);
-                    var_dump($compatibleTypes[$compatibleTypesKey]);
                 }
                 yield $name => [$super, $sub, $expected];
                 unset($compatibleTypes[$compatibleTypesKey]);
