@@ -6,6 +6,7 @@ namespace PhpTypes\Types\Tests\Functional;
 
 use DirectoryIterator;
 use LogicException;
+use PhpTypes\Types\AbstractType;
 use PhpTypes\Types\ClassLikeType;
 use PhpTypes\Types\Compatibility;
 use PhpTypes\Types\MixedType;
@@ -22,6 +23,9 @@ use function sprintf;
 
 final class CompatibilityTest extends TestCase
 {
+    /** @var array<string, AbstractType> */
+    private static array $cache = [];
+
     private static Scope $scope;
 
     public static function setUpBeforeClass(): void
@@ -107,13 +111,23 @@ final class CompatibilityTest extends TestCase
         return $aliases;
     }
 
+    private static function fromString(string $typeString, Scope $scope): AbstractType
+    {
+        $type = self::$cache[$typeString] ?? null;
+        if ($type === null) {
+            $type = Type::fromString($typeString, $scope);
+            self::$cache[$typeString] = $type;
+        }
+        return $type;
+    }
+
     /**
      * @dataProvider compatibilityCases
      */
     public function testCompatibility(string $super, string $sub, bool $expected): void
     {
-        $superType = Type::fromString($super, self::$scope);
-        $subType = Type::fromString($sub, self::$scope);
+        $superType = self::fromString($super, self::$scope);
+        $subType = self::fromString($sub, self::$scope);
 
         $message = $expected
             ? sprintf('Expected "%s" to be a subtype of "%s", but it is not', $sub, $super)
@@ -161,7 +175,7 @@ final class CompatibilityTest extends TestCase
     public function testEveryTypeIsCompatibleWithMixed(string $type): void
     {
         self::assertTrue(
-            Compatibility::check(new MixedType(), Type::fromString($type, self::$scope)),
+            Compatibility::check(new MixedType(), self::fromString($type, self::$scope)),
             sprintf('Expected "%s" to be a subtype of "mixed", but it is not', $type),
         );
     }
@@ -181,8 +195,8 @@ final class CompatibilityTest extends TestCase
      */
     public function testAliases(string $a, string $b, bool $expected): void
     {
-        $aType = Type::fromString($a, self::$scope);
-        $bType = Type::fromString($b, self::$scope);
+        $aType = self::fromString($a, self::$scope);
+        $bType = self::fromString($b, self::$scope);
 
         $isAlias = Compatibility::check($aType, $bType) && Compatibility::check($bType, $aType);
 

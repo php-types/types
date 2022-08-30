@@ -42,4 +42,6 @@
 - `array{string, string}` is a subtype of `list<int | string>`
 - `array{string, string}` is a subtype of `list<string>`
 - `array{string, string}` is a subtype of `list<string> | list<int>`
+- `array{string, string}` is a subtype of `list<string> | string`
 - `array{string, string}` is a subtype of `non-empty-list<string>`
+- `array{string, string}` is a subtype of `string | list<string>`

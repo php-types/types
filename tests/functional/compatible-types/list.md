@@ -1,3 +1,4 @@
+
 - `list<int>` is a subtype of `array`
 - `list<int>` is a subtype of `array<array-key, float>`
 - `list<int>` is a subtype of `array<array-key, mixed>`
@@ -32,6 +33,7 @@
 - `list<string>` is a subtype of `array`
 - `list<string>` is a subtype of `array<array-key, mixed>`
 - `list<string>` is a subtype of `array<array-key, string | int>`
+- `list<string>` is a subtype of `array<int, string>`
 - `list<string>` is a subtype of `array<mixed>`
 - `list<string>` is a subtype of `iterable`
 - `list<string>` is a subtype of `iterable<mixed>`
@@ -40,7 +42,8 @@
 - `list<string>` is a subtype of `list<int | string>`
 - `list<string>` is a subtype of `list<string>`
 - `list<string>` is a subtype of `list<string> | list<int>`
-- `list<string>` is a subtype of `array<int, string>`
+- `list<string>` is a subtype of `list<string> | string`
+- `list<string>` is a subtype of `string | list<string>`
 
 - `non-empty-list<string>` is a subtype of `array`
 - `non-empty-list<string>` is a subtype of `array<array-key, mixed>`
@@ -54,5 +57,7 @@
 - `non-empty-list<string>` is a subtype of `list<int | string>`
 - `non-empty-list<string>` is a subtype of `list<string>`
 - `non-empty-list<string>` is a subtype of `list<string> | list<int>`
+- `non-empty-list<string>` is a subtype of `list<string> | string`
+- `non-empty-list<string>` is a subtype of `string | list<string>`
 - `non-empty-list<string>` is a subtype of `non-empty-array<int, string>`
 - `non-empty-list<string>` is a subtype of `non-empty-list<string>`

@@ -7,3 +7,5 @@ false | true
 'foo' | 'bar'
 bool | true
 string | 'foo'
+list<string> | string
+string | list<string>

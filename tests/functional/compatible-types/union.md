@@ -1,11 +1,13 @@
 - `'foo' | 'bar'` is a subtype of `'foo' | 'bar'`
 - `'foo' | 'bar'` is a subtype of `int | string`
+- `'foo' | 'bar'` is a subtype of `list<string> | string`
 - `'foo' | 'bar'` is a subtype of `non-empty-string`
 - `'foo' | 'bar'` is a subtype of `scalar`
 - `'foo' | 'bar'` is a subtype of `string`
 - `'foo' | 'bar'` is a subtype of `string | 'foo'`
 - `'foo' | 'bar'` is a subtype of `string | int`
 - `'foo' | 'bar'` is a subtype of `string | int | bool`
+- `'foo' | 'bar'` is a subtype of `string | list<string>`
 
 - `bool | true` is a subtype of `bool`
 - `bool | true` is a subtype of `bool | true`
@@ -36,12 +38,17 @@
 - `list<string> | list<int>` is a subtype of `iterable<mixed>`
 - `list<string> | list<int>` is a subtype of `iterable<mixed, mixed>`
 
+- `list<string> | string` is a subtype of `list<string> | string`
+- `list<string> | string` is a subtype of `string | list<string>`
+
 - `string | 'foo'` is a subtype of `int | string`
+- `string | 'foo'` is a subtype of `list<string> | string`
 - `string | 'foo'` is a subtype of `scalar`
 - `string | 'foo'` is a subtype of `string`
 - `string | 'foo'` is a subtype of `string | 'foo'`
 - `string | 'foo'` is a subtype of `string | int`
 - `string | 'foo'` is a subtype of `string | int | bool`
+- `string | 'foo'` is a subtype of `string | list<string>`
 
 - `string | int` is a subtype of `int | string`
 - `string | int` is a subtype of `scalar`
@@ -50,6 +57,9 @@
 
 - `string | int | bool` is a subtype of `scalar`
 - `string | int | bool` is a subtype of `string | int | bool`
+
+- `string | list<string>` is a subtype of `list<string> | string`
+- `string | list<string>` is a subtype of `string | list<string>`
 
 - `true | false` is a subtype of `bool`
 - `true | false` is a subtype of `bool | true`

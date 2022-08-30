@@ -18,3 +18,4 @@
 - `bool | true` is an alias of `true | false`
 - `bool | true` is an alias of `false | true`
 - `string | 'foo'` is an alias of `string`
+- `string | list<string>` is an alias of `list<string> | string`

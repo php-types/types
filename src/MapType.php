@@ -7,8 +7,10 @@ namespace PhpTypes\Types;
 use PhpTypes\Ast\Node\IdentifierNode;
 use PhpTypes\Ast\Node\NodeInterface;
 use PhpTypes\Types\Conversion\ToIterableInterface;
+use RuntimeException;
 
 use function in_array;
+use function sprintf;
 
 final class MapType extends AbstractType implements ToIterableInterface
 {
@@ -17,11 +19,12 @@ final class MapType extends AbstractType implements ToIterableInterface
         public readonly AbstractType $valueType,
         public readonly bool $nonEmpty = false,
     ) {
-    }
-
-    public static function nonEmpty(AbstractType $keyType, AbstractType $valueType): self
-    {
-        return new self($keyType, $valueType, true);
+        if (Compatibility::check(new UnionType(new StringType(), new IntType()), $keyType)) {
+            return;
+        }
+        throw new RuntimeException(
+            sprintf('Can\'t use %s as array key. Only strings and integers are allowed.', $keyType),
+        );
     }
 
     private static function isArrayKey(AbstractType $type): bool
