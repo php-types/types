@@ -19,6 +19,7 @@ use function array_search;
 use function explode;
 use function implode;
 use function in_array;
+use function is_int;
 use function sort;
 use function sprintf;
 use function var_dump;
@@ -147,7 +148,7 @@ final class CompatibilityTest extends TestCase
         foreach (self::types() as $super) {
             foreach (self::types() as $sub) {
                 $compatibleTypesKey = array_search([$super, $sub], $compatibleTypes, true);
-                $expected = $compatibleTypesKey !== false;
+                $expected = is_int($compatibleTypesKey);
                 $name = $expected
                     ? sprintf('%s is a subtype of %s', $sub, $super)
                     : sprintf('%s is not a subtype of %s', $sub, $super);
