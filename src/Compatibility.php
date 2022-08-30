@@ -23,7 +23,7 @@ final class Compatibility
 
     public static function check(AbstractType $super, AbstractType $sub): bool
     {
-        if (!$super instanceof UnionType && $sub instanceof UnionType) {
+        if ($sub instanceof UnionType) {
             return self::checkSubUnion($super, $sub);
         }
         return match (true) {

@@ -1,3 +1,4 @@
 float
 null
 scalar
+never
