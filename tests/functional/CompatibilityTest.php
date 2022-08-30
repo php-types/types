@@ -17,12 +17,9 @@ use PHPUnit\Framework\TestCase;
 use function array_map;
 use function array_search;
 use function explode;
-use function implode;
 use function in_array;
-use function is_int;
 use function sort;
 use function sprintf;
-use function var_dump;
 
 final class CompatibilityTest extends TestCase
 {
@@ -144,15 +141,17 @@ final class CompatibilityTest extends TestCase
     public function compatibilityCases(): iterable
     {
         $compatibleTypes = self::compatibleTypes();
-        var_dump($compatibleTypes);
         foreach (self::types() as $super) {
             foreach (self::types() as $sub) {
                 $compatibleTypesKey = array_search([$super, $sub], $compatibleTypes, true);
-                $expected = is_int($compatibleTypesKey);
+                $expected = $compatibleTypesKey !== false;
                 $name = $expected
                     ? sprintf('%s is a subtype of %s', $sub, $super)
                     : sprintf('%s is not a subtype of %s', $sub, $super);
                 yield $name => [$super, $sub, $expected];
+                if ($compatibleTypesKey === false) {
+                    continue;
+                }
                 unset($compatibleTypes[$compatibleTypesKey]);
             }
         }
