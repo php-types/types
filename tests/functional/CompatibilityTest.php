@@ -46,7 +46,7 @@ final class CompatibilityTest extends TestCase
         $types = [];
         foreach (self::filesInDirectory(__DIR__ . '/compatible-types/') as $file) {
             foreach (explode("\n", \Safe\file_get_contents($file)) as $line) {
-                $isMatch = \Safe\preg_match('/^- `(?<sub>.+)` is a subtype of `(?<super>.+)`/', $line, $matches);
+                $isMatch = \Safe\preg_match('/- `(?<sub>.+)` is a subtype of `(?<super>.+)`/', $line, $matches);
                 if ($isMatch === 0) {
                     continue;
                 }
