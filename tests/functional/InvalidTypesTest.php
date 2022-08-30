@@ -45,5 +45,23 @@ final class InvalidTypesTest extends TestCase
             'class-string<Foo, Bar>',
             'class-string takes zero or one type parameters',
         ];
+        yield 'List with two type parameters' => [
+            'list<string, int>',
+            'The list type takes exactly one type parameter, 2 (string, int) given',
+        ];
+        yield 'Unknown identifier' => [
+            'my-imaginary-type',
+            'Unknown type my-imaginary-type',
+        ];
+        yield 'Unknown identifier with type parameters' => [
+            'my-imaginary-type<string, int>',
+            'Unknown type my-imaginary-type<string, int>',
+        ];
+        yield 'Map with three type parameters' => [
+            'array<string, int, bool>',
+            'Array types must take one of the following forms: '
+            . 'array, array<ValueType>, array<KeyType, ValueType>. '
+            . 'Got array<string, int, bool>',
+        ];
     }
 }

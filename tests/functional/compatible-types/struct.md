@@ -3,6 +3,7 @@
 - `array{age?: int, name: string}` is a subtype of `array<array-key, mixed>`
 - `array{age?: int, name: string}` is a subtype of `array<array-key, string | int>`
 - `array{age?: int, name: string}` is a subtype of `array<mixed>`
+- `array{age?: int, name: string}` is a subtype of `array{}`
 - `array{age?: int, name: string}` is a subtype of `array{age?: int, name: string}`
 - `array{age?: int, name: string}` is a subtype of `array{name: string}`
 - `array{age?: int, name: string}` is a subtype of `array{name: string, age?: int}`
@@ -17,6 +18,7 @@
 - `array{name: int}` is a subtype of `array<array-key, string | int>`
 - `array{name: int}` is a subtype of `array<float>`
 - `array{name: int}` is a subtype of `array<mixed>`
+- `array{name: int}` is a subtype of `array{}`
 - `array{name: int}` is a subtype of `array{name: int}`
 - `array{name: int}` is a subtype of `iterable`
 - `array{name: int}` is a subtype of `iterable<mixed>`
@@ -27,6 +29,7 @@
 - `array{name: string}` is a subtype of `array<array-key, mixed>`
 - `array{name: string}` is a subtype of `array<array-key, string | int>`
 - `array{name: string}` is a subtype of `array<mixed>`
+- `array{name: string}` is a subtype of `array{}`
 - `array{name: string}` is a subtype of `array{name: string}`
 - `array{name: string}` is a subtype of `iterable`
 - `array{name: string}` is a subtype of `iterable<mixed>`
@@ -38,6 +41,7 @@
 - `array{name: string, age: int}` is a subtype of `array<array-key, mixed>`
 - `array{name: string, age: int}` is a subtype of `array<array-key, string | int>`
 - `array{name: string, age: int}` is a subtype of `array<mixed>`
+- `array{name: string, age: int}` is a subtype of `array{}`
 - `array{name: string, age: int}` is a subtype of `array{age?: int, name: string}`
 - `array{name: string, age: int}` is a subtype of `array{name: string}`
 - `array{name: string, age: int}` is a subtype of `array{name: string, age: int}`
@@ -51,6 +55,7 @@
 - `array{name: string, age?: int}` is a subtype of `array<array-key, mixed>`
 - `array{name: string, age?: int}` is a subtype of `array<array-key, string | int>`
 - `array{name: string, age?: int}` is a subtype of `array<mixed>`
+- `array{name: string, age?: int}` is a subtype of `array{}`
 - `array{name: string, age?: int}` is a subtype of `array{age?: int, name: string}`
 - `array{name: string, age?: int}` is a subtype of `array{name: string}`
 - `array{name: string, age?: int}` is a subtype of `array{name: string, age?: int}`
@@ -61,6 +66,7 @@
 - `array{obj: Foo}` is a subtype of `array`
 - `array{obj: Foo}` is a subtype of `array<array-key, mixed>`
 - `array{obj: Foo}` is a subtype of `array<mixed>`
+- `array{obj: Foo}` is a subtype of `array{}`
 - `array{obj: Foo}` is a subtype of `array{obj: Foo}`
 - `array{obj: Foo}` is a subtype of `iterable`
 - `array{obj: Foo}` is a subtype of `iterable<mixed>`

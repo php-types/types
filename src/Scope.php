@@ -76,7 +76,8 @@ final class Scope
     {
         $type = $this->types[$name] ?? null;
         if ($type === null) {
-            throw new RuntimeException(sprintf('Unknown type %s', $name));
+            $typeString = $name . ($typeParameters !== [] ? '<' . implode(', ', $typeParameters) . '>' : '');
+            throw new RuntimeException(sprintf('Unknown type %s', $typeString));
         }
         return $type instanceof AbstractType ? $type : $type($typeParameters);
     }
@@ -101,7 +102,8 @@ final class Scope
             2 => [$typeParameters[0], $typeParameters[1]],
             default => throw new RuntimeException(
                 'Array types must take one of the following forms: ' .
-                'array, array<ValueType>, array<KeyType, ValueType>',
+                'array, array<ValueType>, array<KeyType, ValueType>. ' .
+                'Got array<' . implode(', ', $typeParameters) . '>',
             ),
         };
         return new MapType($keyType, $valueType, $nonEmpty);
