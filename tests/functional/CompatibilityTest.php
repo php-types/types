@@ -48,7 +48,6 @@ final class CompatibilityTest extends TestCase
             foreach (explode("\n", \Safe\file_get_contents($file)) as $line) {
                 $isMatch = \Safe\preg_match('/- `(?<sub>.+)` is a subtype of `(?<super>.+)`/', $line, $matches);
                 if ($isMatch === 0) {
-                    echo sprintf('Line "%s" in file "%s" is not a match', $line, $file);
                     continue;
                 }
                 $types[] = [$matches['super'], $matches['sub']];
