@@ -21,6 +21,7 @@ use function implode;
 use function in_array;
 use function sort;
 use function sprintf;
+use function var_dump;
 
 final class CompatibilityTest extends TestCase
 {
@@ -142,12 +143,6 @@ final class CompatibilityTest extends TestCase
     public function compatibilityCases(): iterable
     {
         $compatibleTypes = self::compatibleTypes();
-        echo implode(
-            "\n",
-            array_map(static function (array $tuple): string {
-                    return sprintf('- `%s` is a subtype of `%s`', $tuple[1], $tuple[0]);
-            }, $compatibleTypes),
-        ) . "\n";
         foreach (self::types() as $super) {
             foreach (self::types() as $sub) {
                 $compatibleTypesKey = array_search([$super, $sub], $compatibleTypes, true);
@@ -155,6 +150,12 @@ final class CompatibilityTest extends TestCase
                 $name = $expected
                     ? sprintf('%s is a subtype of %s', $sub, $super)
                     : sprintf('%s is not a subtype of %s', $sub, $super);
+                if ($name === 'list<int> is not a subtype of array') {
+                    var_dump($compatibleTypes);
+                    var_dump($compatibleTypesKey);
+                    var_dump([$super, $sub]);
+                    var_dump($compatibleTypes[$compatibleTypesKey]);
+                }
                 yield $name => [$super, $sub, $expected];
                 unset($compatibleTypes[$compatibleTypesKey]);
             }
