@@ -52,3 +52,9 @@ jobs:
               --min-msi=100 \
               --min-covered-msi=100 \
               --ignore-msi-with-no-mutations
+
+      - name: Archive Infection log
+        uses: actions/upload-artifact@v3
+        with:
+          name: infection-log
+          path: infection.log
