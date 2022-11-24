@@ -19,6 +19,24 @@ final class StructType extends AbstractType implements ToIterableInterface, ToMa
     {
     }
 
+    /**
+     * @param iterable<mixed, self> $structs
+     */
+    public static function merge(iterable $structs): self
+    {
+        $members = [];
+        foreach ($structs as $struct) {
+            foreach ($struct->members as $name => $member) {
+                if (!isset($members[$name])) {
+                    $members[$name] = $member;
+                    continue;
+                }
+                $members[$name] = $members[$name]->intersect($member);
+            }
+        }
+        return new self($members);
+    }
+
     public function toNode(): NodeInterface
     {
         $members = [];

@@ -117,7 +117,7 @@ final class Type
 
     private static function fromIntersection(IntersectionNode $node, Scope $scope): AbstractType
     {
-        return new IntersectionType(
+        return IntersectionType::create(
             self::fromNode($node->left, $scope),
             self::fromNode($node->right, $scope),
         );

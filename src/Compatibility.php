@@ -27,6 +27,9 @@ final class Compatibility
         if ($sub instanceof UnionType) {
             return self::checkSubUnion($super, $sub);
         }
+        if ($sub instanceof IntersectionType) {
+            return self::checkSubIntersection($super, $sub);
+        }
         return match (true) {
             $super instanceof BoolType => self::checkBool($super, $sub),
             $super instanceof CallableType => self::checkCallable($super, $sub),
@@ -34,6 +37,7 @@ final class Compatibility
             $super instanceof ClassStringType => self::checkClassString($super, $sub),
             $super instanceof FloatType => self::checkFloat($sub),
             $super instanceof IntLiteralType => self::checkIntLiteral($super, $sub),
+            $super instanceof IntersectionType => self::checkIntersection($super, $sub),
             $super instanceof IntType => self::checkInt($super, $sub),
             $super instanceof IterableType => self::checkIterable($super, $sub),
             $super instanceof ListType => self::checkList($super, $sub),
@@ -229,6 +233,9 @@ final class Compatibility
         foreach ($super->members as $name => $member) {
             $subMember = array_key_exists($name, $sub->members) ? $sub->members[$name] : null;
             if ($subMember === null) {
+                if ($member->optional) {
+                    continue;
+                }
                 return false;
             }
             if (!self::check($member->type, $subMember->type)) {
@@ -283,6 +290,16 @@ final class Compatibility
     }
 
     private static function checkSubUnion(AbstractType $super, UnionType $sub): bool
+    {
+        return self::check($super, $sub->left) && self::check($super, $sub->right);
+    }
+
+    private static function checkIntersection(IntersectionType $super, AbstractType $sub): bool
+    {
+        return self::check($super->left, $sub) && self::check($super->right, $sub);
+    }
+
+    private static function checkSubIntersection(AbstractType $super, IntersectionType $sub): bool
     {
         return self::check($super, $sub->left) && self::check($super, $sub->right);
     }

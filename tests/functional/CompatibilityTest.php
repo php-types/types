@@ -36,6 +36,12 @@ final class CompatibilityTest extends TestCase
         $fooInterface = new ClassLikeType('FooInterface');
         self::$scope->register('FooInterface', $fooInterface);
         self::$scope->register('Foo', new ClassLikeType('Foo', parents: [$fooInterface]));
+        $runnable = new ClassLikeType('Runnable');
+        self::$scope->register('Runnable', $runnable);
+        $loggable = new ClassLikeType('Loggable');
+        self::$scope->register('Loggable', $loggable);
+        $runnableAndLoggable = new ClassLikeType('RunnableAndLoggable', parents: [$runnable, $loggable]);
+        self::$scope->register('RunnableAndLoggable', $runnableAndLoggable);
     }
 
     /**
@@ -201,7 +207,9 @@ final class CompatibilityTest extends TestCase
         $aType = self::fromString($a, self::$scope);
         $bType = self::fromString($b, self::$scope);
 
-        $isAlias = Compatibility::check($aType, $bType) && Compatibility::check($bType, $aType);
+        $aContainsB = Compatibility::check($aType, $bType);
+        $bContainsA = Compatibility::check($bType, $aType);
+        $isAlias = $aContainsB && $bContainsA;
 
         $message = $expected
             ? sprintf('Expected "%s" to be an alias of "%s", but it is not', $b, $a)
