@@ -21,7 +21,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "PhpTypes\\Types\\Tests\\Functional\\": "tests/functional"
+            "PhpTypes\\Types\\Tests\\Functional\\": "tests/functional",
+            "PhpTypes\\Types\\Tests\\Unit\\": "tests/unit"
         }
     },
     "config": {

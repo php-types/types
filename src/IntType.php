@@ -14,11 +14,6 @@ final class IntType extends AbstractType
     {
     }
 
-    public static function minMax(int $min, int $max): self
-    {
-        return new self($min, $max);
-    }
-
     public static function min(int $min): self
     {
         return new self($min, null);

@@ -44,6 +44,9 @@ final class Type
             $node instanceof StructNode => self::fromStruct($node->members, $scope),
             $node instanceof TupleNode => self::fromTuple($node, $scope),
             $node instanceof UnionNode => self::fromUnion($node, $scope),
+            default => throw new RuntimeException(
+                sprintf('Unsupported node type: %s (%s)', get_class($node), $node)
+            ),
         };
     }
 
@@ -61,10 +64,18 @@ final class Type
 
     private static function fromUnion(UnionNode $node, Scope $scope): AbstractType
     {
-        return new UnionType(
-            self::fromNode($node->left, $scope),
-            self::fromNode($node->right, $scope),
-        );
+        $left = self::fromNode($node->left, $scope);
+        $right = self::fromNode($node->right, $scope);
+        if (Compatibility::check($left, $right)) {
+            return $left;
+        }
+        if (Compatibility::check($right, $left)) {
+            return $right;
+        }
+        if ($left instanceof BoolType && $right instanceof BoolType) {
+            return new BoolType($left->value === $right->value ? $left->value : null);
+        }
+        return new UnionType($left, $right);
     }
 
     private static function fromTuple(TupleNode $node, Scope $scope): TupleType
@@ -77,7 +88,7 @@ final class Type
     }
 
     /**
-     * @param list<StructMemberNode> $members
+     * @param array<non-empty-string, StructMemberNode> $members
      */
     private static function fromStruct(array $members, Scope $scope): StructType
     {
@@ -106,7 +117,7 @@ final class Type
 
     private static function fromIntersection(IntersectionNode $node, Scope $scope): AbstractType
     {
-        return new IntersectionType(
+        return IntersectionType::create(
             self::fromNode($node->left, $scope),
             self::fromNode($node->right, $scope),
         );
