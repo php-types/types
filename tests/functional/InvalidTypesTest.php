@@ -63,5 +63,21 @@ final class InvalidTypesTest extends TestCase
             . 'array, array<ValueType>, array<KeyType, ValueType>. '
             . 'Got array<string, int, bool>',
         ];
+        yield 'Int with invalid minimum' => [
+            'int<Foo, 10>',
+            'Invalid minimum value for int type: Foo. Must be an integer or "min".',
+        ];
+        yield 'Int with invalid maximum' => [
+            'int<10, Foo>',
+            'Invalid maximum value for int type: Foo. Must be an integer or "max".',
+        ];
+        yield 'Int with a single type parameter' => [
+            'int<10>',
+            'The int type takes exactly zero or two type parameters, 1 (10) given',
+        ];
+        yield 'Int with three type parameters' => [
+            'int<10, 20, 30>',
+            'The int type takes exactly zero or two type parameters, 3 (10, 20, 30) given',
+        ];
     }
 }

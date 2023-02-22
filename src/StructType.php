@@ -13,14 +13,14 @@ use PhpTypes\Types\Dto\StructMember;
 final class StructType extends AbstractType implements ToIterableInterface, ToMapInterface
 {
     /**
-     * @param array<non-empty-string, StructMember> $members
+     * @param non-empty-array<non-empty-string, StructMember> $members
      */
     public function __construct(public readonly array $members)
     {
     }
 
     /**
-     * @param iterable<mixed, self> $structs
+     * @param non-empty-array<array-key, self> $structs
      */
     public static function merge(iterable $structs): self
     {
@@ -63,9 +63,6 @@ final class StructType extends AbstractType implements ToIterableInterface, ToMa
      */
     private function keyAndValueType(): array
     {
-        if ($this->members === []) {
-            return [StringType::nonEmpty(), new MixedType()];
-        }
         /** @var array{AbstractType, AbstractType}|null $types */
         $types = null;
         foreach ($this->members as $name => $member) {
