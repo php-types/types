@@ -177,6 +177,9 @@ final class Compatibility
     private static function checkList(ListType $super, AbstractType $sub): bool
     {
         if ($sub instanceof TupleType) {
+            if ($super->nonEmpty && $sub->elements === []) {
+                return false;
+            }
             foreach ($sub->elements as $element) {
                 if (self::check($super->type, $element)) {
                     continue;
@@ -210,6 +213,12 @@ final class Compatibility
 
     private static function checkTuple(TupleType $super, AbstractType $sub): bool
     {
+        if ($super->elements === []) {
+            return $sub instanceof ListType
+                || $sub instanceof TupleType
+                || $sub instanceof MapType
+                || $sub instanceof StructType;
+        }
         if (!$sub instanceof TupleType) {
             return false;
         }

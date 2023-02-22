@@ -26,3 +26,12 @@
 - `array{name: string, age?: int}` is an alias of `array{name: string} & array{name?: string}`
 - `array{name: string}` is an alias of `array{age?: int, name: string}`
 - `array{name: string, age?: int}` is an alias of `array{name: string}`
+
+- `array{}` is an alias of `array`
+- `array{}` is an alias of `array<array-key, mixed>`
+- `array{}` is an alias of `array<mixed>`
+- `array{}` is an alias of `list<int>`
+- `array{}` is an alias of `list<int | bool>`
+- `array{}` is an alias of `list<int | string>`
+- `array{}` is an alias of `list<string>`
+- `array{}` is an alias of `list<string> | list<int>`

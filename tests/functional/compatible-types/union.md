@@ -34,6 +34,7 @@
 - `list<string> | list<int>` is a subtype of `array<array-key, mixed>`
 - `list<string> | list<int>` is a subtype of `array<array-key, string | int>`
 - `list<string> | list<int>` is a subtype of `array<mixed>`
+- `list<string> | list<int>` is a subtype of `array{}`
 - `list<string> | list<int>` is a subtype of `list<int | string>`
 - `list<string> | list<int>` is a subtype of `list<string> | list<int>`
 - `list<string> | list<int>` is a subtype of `iterable`
