@@ -43,10 +43,11 @@ final class IntersectionType extends AbstractType
      */
     private static function unflatten(array $types): AbstractType
     {
+        $first = array_shift($types);
         return match (count($types)) {
-            1 => array_shift($types),
-            2 => new self(array_shift($types), array_shift($types)),
-            default => new self(array_shift($types), self::unflatten($types)),
+            0 => $first,
+            1 => new self($first, array_shift($types)),
+            default => new self($first, self::unflatten($types)),
         };
     }
 
