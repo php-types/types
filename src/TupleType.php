@@ -6,8 +6,10 @@ namespace PhpTypes\Types;
 
 use PhpTypes\Ast\Node\NodeInterface;
 use PhpTypes\Ast\Node\TupleNode;
+use PhpTypes\Types\Conversion\ToIterableInterface;
+use PhpTypes\Types\Conversion\ToMapInterface;
 
-final class TupleType extends AbstractType
+final class TupleType extends AbstractType implements ToIterableInterface, ToMapInterface
 {
     /**
      * @param list<AbstractType> $elements
@@ -23,5 +25,32 @@ final class TupleType extends AbstractType
             $elementNodes[] = $element->toNode();
         }
         return new TupleNode($elementNodes);
+    }
+
+    public function toMap(): MapType
+    {
+        return new MapType(new IntType(), $this->valueType());
+    }
+
+    public function toIterable(): IterableType
+    {
+        return new IterableType(new IntType(), $this->valueType());
+    }
+
+    private function valueType(): AbstractType
+    {
+        $valueType = null;
+        foreach ($this->elements as $element) {
+            if ($valueType === null) {
+                $valueType = $element;
+                continue;
+            }
+            // @infection-ignore-all This isn't really required, it's just an optimization.
+            if (Compatibility::check($valueType, $element)) {
+                continue;
+            }
+            $valueType = new UnionType($valueType, $element);
+        }
+        return $valueType ?? new NeverType();
     }
 }

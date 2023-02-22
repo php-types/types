@@ -12,9 +12,13 @@ final class ClassLikeType extends AbstractType
     /**
      * @param non-empty-string $name
      * @param list<AbstractType> $typeParameters
+     * @param list<ClassLikeType> $parents
      */
-    public function __construct(public readonly string $name, public readonly array $typeParameters = [])
-    {
+    public function __construct(
+        public readonly string $name,
+        public readonly array $typeParameters = [],
+        public readonly array $parents = [],
+    ) {
     }
 
     public function toNode(): NodeInterface

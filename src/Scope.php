@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PhpTypes\Types;
 
-use PhpTypes\Ast\Node\IdentifierNode;
 use RuntimeException;
 
 use function count;
@@ -25,7 +24,6 @@ final class Scope
         $scope->register('bool', new BoolType());
         $scope->register('false', new BoolType(false));
         $scope->register('float', new FloatType());
-        $scope->register('int', self::int(...));
         $scope->register('iterable', $scope->iterable(...));
         $scope->register('list', self::list(...));
         $scope->register('mixed', new MixedType());
@@ -43,58 +41,6 @@ final class Scope
         $scope->register('true', new BoolType(true));
         $scope->register('void', new VoidType());
         return $scope;
-    }
-
-    /**
-     * @param list<AbstractType> $typeParameters
-     */
-    private static function int(array $typeParameters): IntType
-    {
-        switch (count($typeParameters)) {
-            case 0:
-                return new IntType();
-            case 2:
-                if (
-                    $typeParameters[0] instanceof IntLiteralType
-                    && $typeParameters[1] instanceof IntLiteralType
-                ) {
-                    return IntType::minMax(
-                        $typeParameters[0]->value,
-                        $typeParameters[1]->value,
-                    );
-                }
-                if (
-                    $typeParameters[0] instanceof IntLiteralType
-                    && $typeParameters[1] instanceof IdentifierNode
-                    && $typeParameters[1]->name === 'max'
-                ) {
-                    return IntType::min($typeParameters[0]->value);
-                }
-                if (
-                    $typeParameters[0] instanceof IdentifierNode
-                    && $typeParameters[0]->name === 'min'
-                    && $typeParameters[1] instanceof IntLiteralType
-                ) {
-                    return IntType::max($typeParameters[1]->value);
-                }
-                throw new RuntimeException(
-                    sprintf(
-                        'Integer types must take one of the following forms: ' .
-                        'int, `int<23, 42>`, `int<min, 42>`, `int<23, max>`. ' .
-                        'Got: int<%s>',
-                        implode(', ', $typeParameters),
-                    )
-                );
-            default:
-                throw new RuntimeException(
-                    sprintf(
-                        'Integer types must take one of the following forms: ' .
-                        'int, `int<23, 42>`, `int<min, 42>`, `int<23, max>`. ' .
-                        'Got: int<%s>',
-                        implode(', ', $typeParameters),
-                    )
-                );
-        }
     }
 
     /**
@@ -130,7 +76,8 @@ final class Scope
     {
         $type = $this->types[$name] ?? null;
         if ($type === null) {
-            throw new RuntimeException(sprintf('Unknown type %s', $name));
+            $typeString = $name . ($typeParameters !== [] ? '<' . implode(', ', $typeParameters) . '>' : '');
+            throw new RuntimeException(sprintf('Unknown type %s', $typeString));
         }
         return $type instanceof AbstractType ? $type : $type($typeParameters);
     }
@@ -155,7 +102,8 @@ final class Scope
             2 => [$typeParameters[0], $typeParameters[1]],
             default => throw new RuntimeException(
                 'Array types must take one of the following forms: ' .
-                'array, array<ValueType>, array<KeyType, ValueType>',
+                'array, array<ValueType>, array<KeyType, ValueType>. ' .
+                'Got array<' . implode(', ', $typeParameters) . '>',
             ),
         };
         return new MapType($keyType, $valueType, $nonEmpty);

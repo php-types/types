@@ -20,6 +20,8 @@ use PhpTypes\Types\Dto\StructMember;
 use RuntimeException;
 
 use function count;
+use function implode;
+use function sprintf;
 
 final class Type
 {
@@ -44,6 +46,9 @@ final class Type
             $node instanceof StructNode => self::fromStruct($node->members, $scope),
             $node instanceof TupleNode => self::fromTuple($node, $scope),
             $node instanceof UnionNode => self::fromUnion($node, $scope),
+            default => throw new RuntimeException(
+                sprintf('Unsupported node type: %s (%s)', get_class($node), $node)
+            ),
         };
     }
 
@@ -61,10 +66,18 @@ final class Type
 
     private static function fromUnion(UnionNode $node, Scope $scope): AbstractType
     {
-        return new UnionType(
-            self::fromNode($node->left, $scope),
-            self::fromNode($node->right, $scope),
-        );
+        $left = self::fromNode($node->left, $scope);
+        $right = self::fromNode($node->right, $scope);
+        if (Compatibility::check($left, $right)) {
+            return $left;
+        }
+        if (Compatibility::check($right, $left)) {
+            return $right;
+        }
+        if ($left instanceof BoolType && $right instanceof BoolType) {
+            return new BoolType($left->value === $right->value ? $left->value : null);
+        }
+        return new UnionType($left, $right);
     }
 
     private static function fromTuple(TupleNode $node, Scope $scope): TupleType
@@ -77,10 +90,13 @@ final class Type
     }
 
     /**
-     * @param list<StructMemberNode> $members
+     * @param array<non-empty-string, StructMemberNode> $members
      */
-    private static function fromStruct(array $members, Scope $scope): StructType
+    private static function fromStruct(array $members, Scope $scope): StructType|TupleType
     {
+        if (count($members) === 0) {
+            return new TupleType([]);
+        }
         $typeMembers = [];
         foreach ($members as $name => $member) {
             $typeMembers[$name] = $member->optional
@@ -106,7 +122,7 @@ final class Type
 
     private static function fromIntersection(IntersectionNode $node, Scope $scope): AbstractType
     {
-        return new IntersectionType(
+        return IntersectionType::create(
             self::fromNode($node->left, $scope),
             self::fromNode($node->right, $scope),
         );
@@ -119,7 +135,13 @@ final class Type
             return new IntType();
         }
         if ($numberOfParams !== 2) {
-            throw new RuntimeException('Invalid number of type parameters');
+            throw new RuntimeException(
+                sprintf(
+                    'The int type takes exactly zero or two type parameters, %d (%s) given',
+                    $numberOfParams,
+                    implode(', ', $node->typeParameters),
+                ),
+            );
         }
         $min = (static function () use ($node) {
             if ($node->typeParameters[0] instanceof IdentifierNode && $node->typeParameters[0]->name === 'min') {
@@ -128,7 +150,12 @@ final class Type
             if ($node->typeParameters[0] instanceof IntLiteralNode) {
                 return $node->typeParameters[0]->value;
             }
-            throw new RuntimeException('Invalid int type');
+            throw new RuntimeException(
+                sprintf(
+                    "Invalid minimum value for int type: %s. Must be an integer or \"min\".",
+                    $node->typeParameters[0],
+                )
+            );
         })();
         $max = (static function () use ($node) {
             if ($node->typeParameters[1] instanceof IdentifierNode && $node->typeParameters[1]->name === 'max') {
@@ -137,7 +164,12 @@ final class Type
             if ($node->typeParameters[1] instanceof IntLiteralNode) {
                 return $node->typeParameters[1]->value;
             }
-            throw new RuntimeException('Invalid int type');
+            throw new RuntimeException(
+                sprintf(
+                    "Invalid maximum value for int type: %s. Must be an integer or \"max\".",
+                    $node->typeParameters[1],
+                )
+            );
         })();
         return new IntType($min, $max);
     }

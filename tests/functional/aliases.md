@@ -1,0 +1,37 @@
+- `array` is an alias of `array<array-key, mixed>`
+- `array` is an alias of `array<mixed>`
+- `array<float>` is an alias of `array<array-key, float>`
+- `array<mixed>` is an alias of `array<array-key, mixed>`
+- `array{name: string}` is an alias of `array{name: string} & array{name?: string}`
+- `array{name: string, age: int}` is an alias of `array{name: string} & array{age: int}`
+- `array{name: string, age?: int}` is an alias of `array{age?: int, name: string}`
+- `int<23, 23>` is an alias of `23`
+- `int<1, max>` is an alias of `positive-int`
+- `int<min, -1>` is an alias of `negative-int`
+- `iterable` is an alias of `iterable<mixed, mixed>`
+- `iterable` is an alias of `iterable<mixed>`
+- `iterable<mixed>` is an alias of `iterable<mixed, mixed>`
+- `iterable<array-key, bool>` is an alias of `iterable<string | int, bool>`
+- `string | int` is an alias of `int | string`
+- `true | false` is an alias of `bool`
+- `false | true` is an alias of `bool`
+- `false | true` is an alias of `true | false`
+- `bool | true` is an alias of `bool`
+- `bool | true` is an alias of `true | false`
+- `bool | true` is an alias of `false | true`
+- `string | 'foo'` is an alias of `string`
+- `string | list<string>` is an alias of `list<string> | string`
+
+- `array{age?: int, name: string}` is an alias of `array{name: string} & array{name?: string}`
+- `array{name: string, age?: int}` is an alias of `array{name: string} & array{name?: string}`
+- `array{name: string}` is an alias of `array{age?: int, name: string}`
+- `array{name: string, age?: int}` is an alias of `array{name: string}`
+
+- `array{}` is an alias of `array`
+- `array{}` is an alias of `array<array-key, mixed>`
+- `array{}` is an alias of `array<mixed>`
+- `array{}` is an alias of `list<int>`
+- `array{}` is an alias of `list<int | bool>`
+- `array{}` is an alias of `list<int | string>`
+- `array{}` is an alias of `list<string>`
+- `array{}` is an alias of `list<string> | list<int>`
